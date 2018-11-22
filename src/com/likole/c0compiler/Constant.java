@@ -3,6 +3,7 @@ package com.likole.c0compiler;
 import com.likole.c0compiler.compiler.Parser;
 import com.likole.c0compiler.compiler.Scanner;
 import com.likole.c0compiler.compiler.utils.SymbolTable;
+import com.likole.c0compiler.interpreter.impl.InterpreterImpl;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
