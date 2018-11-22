@@ -1,9 +1,11 @@
-package com.likole.c0compiler;
+package com.likole.c0compiler.Entity;
+
+import com.likole.c0compiler.Symbol;
 
 import java.io.BufferedReader;
 import java.util.Arrays;
 
-public class Scanner {
+public class ScannerImpl {
 
     /**
      * 当前字符
@@ -62,7 +64,7 @@ public class Scanner {
      */
     public int num;
 
-    public Scanner(BufferedReader in) {
+    public ScannerImpl(BufferedReader in) {
         this.in = in;
         single_num=new Symbol[256];
         Arrays.fill(single_num,Symbol.nul);
