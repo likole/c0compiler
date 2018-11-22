@@ -15,4 +15,11 @@ public interface Generator {
      * @param param 指令参数
      */
     void generate(Fct fct, int level, int param);
+
+
+    /**
+     * 输出目标代码清单
+     * @param start 开始输出的位置
+     */
+    public void listcode(int start);
 }
