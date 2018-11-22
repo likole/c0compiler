@@ -4,9 +4,8 @@ package com.likole.c0compiler.entity;
  *　各种符号的编码
  */
 public enum Symbol {
-    nul, ident, number, plus, minus, times, slash,
-    oddsym, eql, neq, lss, leq, gtr, geq, lparen, rparen,
-    comma, semicolon, period, becomes,
-    beginsym, endsym, ifsym, thensym, whilesym, writesym,
-    readsym, dosym, callsym, constsym, varsym, procsym
+    nul, become, ident, number, plus, minus, times, slash, eql, neq, lparen, rparen,
+    comma, semicolon, period,
+    breaksym,casesym,constsym,continuesym,defaultsym,dosym,
+    elsesym,forsym,ifsym,intsym,mainsym,switchsym,voidsym,whilesym,
 }

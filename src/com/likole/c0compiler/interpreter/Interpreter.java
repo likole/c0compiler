@@ -6,12 +6,6 @@ package com.likole.c0compiler.interpreter;
  */
 public interface Interpreter {
 
-    /**
-     * 输出代码清单
-     * @param start 开始输出的位置
-     */
-    void listCode(int start);
-
 
     /**
      * 解释程序

@@ -4,7 +4,7 @@ public class Error {
 
     private static int err=0;
 
-    public static void print(){
+    public static void print(int errorcode){
 
     }
 }
