@@ -1,4 +1,4 @@
-package com.likole.c0compiler;
+package com.likole.c0compiler.entity;
 
 /**
  *　各种符号的编码

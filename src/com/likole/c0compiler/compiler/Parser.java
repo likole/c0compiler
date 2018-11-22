@@ -1,4 +1,4 @@
-package com.likole.c0compiler.Interface;
+package com.likole.c0compiler.compiler;
 
 /**
  * @author kanghao

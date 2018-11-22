@@ -1,6 +1,6 @@
-package com.likole.c0compiler.Interface;
+package com.likole.c0compiler.compiler;
 
-import com.likole.c0compiler.Fct;
+import com.likole.c0compiler.entity.Fct;
 
 /**
  * @author kanghao
