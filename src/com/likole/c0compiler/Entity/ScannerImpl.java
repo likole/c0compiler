@@ -1,4 +1,6 @@
-package com.likole.c0compiler;
+package com.likole.c0compiler.Entity;
+
+import com.likole.c0compiler.Symbol;
 
 import java.io.BufferedReader;
 import java.util.Arrays;

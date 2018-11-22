@@ -1,4 +1,4 @@
-package com.likole.c0compiler;
+package com.likole.c0compiler.Entity;
 
 public class Error {
 
