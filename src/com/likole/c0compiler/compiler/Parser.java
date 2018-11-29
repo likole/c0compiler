@@ -1,11 +1,21 @@
 package com.likole.c0compiler.compiler;
 
+import com.likole.c0compiler.entity.SymSet;
+
 /**
  * @author kanghao
  * @date 18-11-22 下午2:41
  */
 public interface Parser {
 
+    /**
+     *
+     */
+    void test(SymSet s1, SymSet s2, int errorcode);
+
+    /**
+     * 获取下一个符号
+     */
     void loadNextSymbol();
 
     /**
@@ -84,15 +94,15 @@ public interface Parser {
     /**
      * 表达式
      */
-    void expression();
+    void expression(SymSet fsys,int lev);
 
     /**
      * 项分析
      */
-    void term();
+    void term(SymSet fsys,int lev);
 
     /**
      * 因子
      */
-    void factor();
+    void factor(SymSet fsys,int lev);
 }
