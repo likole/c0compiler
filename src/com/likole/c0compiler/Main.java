@@ -20,6 +20,8 @@ public class Main {
     private JPanel optionsPanel;
     private JPanel inputPanel;
     private JButton openButton;
+    private JButton outputButton;
+    private JTextArea textArea1;
 
     private File sourceFile;
 
@@ -52,7 +54,7 @@ public class Main {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Main");
         frame.setContentPane(new Main().mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }

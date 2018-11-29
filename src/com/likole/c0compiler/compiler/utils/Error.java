@@ -2,7 +2,7 @@ package com.likole.c0compiler.compiler.utils;
 
 public class Error {
 
-    private static int err=0;
+    public static int errorCount=0;
 
     public static void print(int errorcode){
 
