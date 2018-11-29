@@ -1,7 +1,6 @@
 package com.likole.c0compiler.compiler.impl;
 
 
-import com.likole.c0compiler.compiler.Generator;
 import com.likole.c0compiler.compiler.Parser;
 import com.likole.c0compiler.entity.Fct;
 import com.likole.c0compiler.entity.SymSet;
@@ -67,10 +66,6 @@ public class ParserImpl implements Parser {
 
     }
 
-    @Override
-    public void loadNextSymbol() {
-
-    }
 
     @Override
     public void prepare() {

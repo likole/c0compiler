@@ -4,6 +4,7 @@ import com.likole.c0compiler.compiler.Parser;
 import com.likole.c0compiler.compiler.Scanner;
 import com.likole.c0compiler.compiler.impl.GeneratorImpl;
 import com.likole.c0compiler.compiler.utils.SymbolTable;
+import com.likole.c0compiler.entity.Symbol;
 import com.likole.c0compiler.interpreter.Interpreter;
 import com.likole.c0compiler.interpreter.impl.InterpreterImpl;
 
@@ -23,7 +24,7 @@ public class Constant {
     public static final int nmax = 14;			// number的最大位数
     public static final int norw = 32;			// 关键字个数
     public static final int txmax = 100;		// 名字表容量
-
+    public static final int symnum = Symbol.values().length;
     // 一些全局变量，其他关键的变量分布如下：
     // cx, code : src.org.zkh.c0.Interpreter
     // dx : src.org.zkh.c0.Parser
