@@ -27,7 +27,7 @@ public class Compiler {
     public static Interpreter interpreter;
     public static Scanner scanner;
     public static Parser parser;
-    public static Generator generator;
+    public static GeneratorImpl generator;
 
     //todo:rename when finished
     public static PrintStream fa;				// 输出虚拟机代码

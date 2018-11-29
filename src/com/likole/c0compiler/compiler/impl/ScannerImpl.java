@@ -1,9 +1,9 @@
 package com.likole.c0compiler.compiler.impl;
 
-import com.likole.c0compiler.Constant;
 import com.likole.c0compiler.compiler.Scanner;
 import com.likole.c0compiler.compiler.utils.Error;
 import com.likole.c0compiler.entity.Symbol;
+import com.likole.c0compiler.Compiler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -121,8 +121,8 @@ public class ScannerImpl implements Scanner{
                 length = line.length();
                 column = 0;
                 content = line;
-                System.out.println(Constant.generator.cx + " " + line);
-                Constant.fa1.println(Constant.generator.cx + " " + line);
+                System.out.println(Compiler.generator.cx + " " + line);
+                Compiler.fa1.println(Compiler.generator.cx + " " + line);
             }
         } catch (IOException e) {
             e.printStackTrace();
