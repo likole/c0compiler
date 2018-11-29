@@ -49,6 +49,21 @@ public class Main {
                 e1.printStackTrace();
             }
         });
+        compileButton.addActionListener(e->{
+            String code=sourceCodeTextArea.getText();
+            boolean showObjectCode= objectCodeCheckBox.isSelected();
+            boolean showSymbolTable=symbolTableCheckBox.isSelected();
+            Compiler compiler=new Compiler(code,showObjectCode,showSymbolTable);
+            try {
+                if(compiler.compile()){
+                    JOptionPane.showMessageDialog(mainPanel, "编译成功", "编译成功",JOptionPane.INFORMATION_MESSAGE);
+                }else{
+                    JOptionPane.showMessageDialog(mainPanel, "无法编译", "编译错误",JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            }
+        });
     }
 
     public static void main(String[] args) {

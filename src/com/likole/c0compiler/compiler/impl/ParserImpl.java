@@ -9,6 +9,11 @@ import com.likole.c0compiler.compiler.Parser;
 public class ParserImpl implements Parser {
 
     @Override
+    public void loadNextSymbol() {
+
+    }
+
+    @Override
     public void prepare() {
 
     }
