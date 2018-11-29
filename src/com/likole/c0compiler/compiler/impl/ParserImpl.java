@@ -68,6 +68,11 @@ public class ParserImpl implements Parser {
     }
 
     @Override
+    public void loadNextSymbol() {
+
+    }
+
+    @Override
     public void prepare() {
 
     }

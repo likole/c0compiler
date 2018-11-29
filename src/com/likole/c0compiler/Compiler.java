@@ -24,9 +24,9 @@ public class Compiler {
 
 
     public static SymbolTable symbolTable;
-    public static Interpreter interpreter;
-    public static Scanner scanner;
-    public static Parser parser;
+    public static InterpreterImpl interpreter;
+    public static ScannerImpl scanner;
+    public static ParserImpl parser;
     public static GeneratorImpl generator;
 
     //todo:rename when finished
@@ -37,18 +37,18 @@ public class Compiler {
     public static boolean listswitch;			// 显示虚拟机代码与否
     public static boolean tableswitch;			// 显示名字表与否
 
-    public Compiler(String code,boolean showVmCode,boolean showSymbolTable) {
+    public Compiler(String code,boolean showObjectCode,boolean showSymbolTable) {
         symbolTable = new SymbolTable();
         interpreter = new InterpreterImpl();
-        scanner = (Scanner) new ScannerImpl(new BufferedReader(new StringReader(code)));
+        scanner = new ScannerImpl(new BufferedReader(new StringReader(code)));
         parser = new ParserImpl();
         generator=new GeneratorImpl();
-        Compiler.listswitch=showVmCode;
+        Compiler.listswitch=showObjectCode;
         Compiler.tableswitch=showSymbolTable;
     }
 
     boolean compile() throws FileNotFoundException {
-        fa=new PrintStream("vmCode");
+        fa=new PrintStream("objectCode");
         fa1=new PrintStream("sourceCode");
         fa2=new PrintStream("result");
         fas=new PrintStream("symbolTable");
