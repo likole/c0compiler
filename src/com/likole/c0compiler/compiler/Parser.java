@@ -6,6 +6,8 @@ package com.likole.c0compiler.compiler;
  */
 public interface Parser {
 
+    void loadNextSymbol();
+
     /**
      * 启动语法分析
      */

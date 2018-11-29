@@ -1,9 +1,10 @@
-package com.likole.c0compiler;
+package com.likole.c0compiler.compiler.impl;
 
 import com.likole.c0compiler.compiler.Parser;
 import com.likole.c0compiler.compiler.Scanner;
 import com.likole.c0compiler.compiler.impl.GeneratorImpl;
 import com.likole.c0compiler.compiler.utils.SymbolTable;
+import com.likole.c0compiler.interpreter.Interpreter;
 import com.likole.c0compiler.interpreter.impl.InterpreterImpl;
 
 import java.io.BufferedReader;
@@ -27,20 +28,4 @@ public class Constant {
     // cx, code : src.org.zkh.c0.Interpreter
     // dx : src.org.zkh.c0.Parser
     // tx, table : src.org.zkh.c0.Table
-    public static PrintStream fa;				// 输出虚拟机代码
-    public static PrintStream fa1;				// 输出源文件及其各行对应的首地址
-    public static PrintStream fa2;				// 输出结果
-    public static PrintStream fas;				// 输出名字表
-    public static boolean listswitch;			// 显示虚拟机代码与否
-    public static boolean tableswitch;			// 显示名字表与否
-
-    // 一个典型的编译器的组成部分
-    public static Scanner lex;					// 词法分析器
-    public static Parser parser;				// 语法分析器
-    public static GeneratorImpl generator;      // 代码生成器
-    public static InterpreterImpl interp;		// 类P-Code解释器（及目标代码生成工具）
-    public static SymbolTable table;			// 名字表
-
-    // 为避免多次创建BufferedReader，我们使用全局统一的Reader
-    public static BufferedReader stdin;			// 标准输入
 }
