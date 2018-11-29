@@ -1,6 +1,6 @@
 package com.likole.c0compiler.compiler.utils;
 
-public class Error {
+public class Error extends Throwable {
 
     public static int errorCount=0;
 
