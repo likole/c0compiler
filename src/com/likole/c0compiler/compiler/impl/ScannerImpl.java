@@ -89,25 +89,18 @@ public class ScannerImpl implements Scanner{
         single_num['}'] = Symbol.rbrace;
 
 
-        word=new String[]{"break","case","const","continue","default","do",
-                "else","for","if","int","main","switch","void","while"};
-
-        word_num=new Symbol[15];
-        word_num[0]=Symbol.breaksym;
-        word_num[1]=Symbol.constsym;
-        word_num[2]=Symbol.continuesym;
-        word_num[3]=Symbol.defaultsym;
-        word_num[4]=Symbol.dosym;
-        word_num[5]=Symbol.elsesym;
-        word_num[6]=Symbol.forsym;
-        word_num[7]=Symbol.ifsym;
-        word_num[8]=Symbol.intsym;
-        word_num[9]=Symbol.mainsym;
-        word_num[10]=Symbol.printfsym;
-        word_num[11]=Symbol.retsym;
-        word_num[12]=Symbol.scanfsym;
-        word_num[13]=Symbol.voidsym;
-        word_num[14]=Symbol.whilesym;
+        word=new String[]{"const", "else","if","int","main","printf","return","scanf","void","while"};
+        word_num=new Symbol[11];
+        word_num[0]=Symbol.constsym;
+        word_num[1]=Symbol.elsesym;
+        word_num[2]=Symbol.ifsym;
+        word_num[3]=Symbol.intsym;
+        word_num[4]=Symbol.mainsym;
+        word_num[5]=Symbol.printfsym;
+        word_num[6]=Symbol.retsym;
+        word_num[7]=Symbol.scanfsym;
+        word_num[8]=Symbol.voidsym;
+        word_num[9]=Symbol.whilesym;
     }
 
 
