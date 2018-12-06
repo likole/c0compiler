@@ -89,7 +89,7 @@ public interface Parser {
     /**
      * 函数调用
      */
-    void callFunction();
+    void callFunction(SymSet fsys, int lev);
 
     /**
      * 表达式

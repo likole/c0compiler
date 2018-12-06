@@ -12,7 +12,7 @@ public class SymbolTable {
      * 种类
      */
     public enum Type {
-        constant, variable, procedure
+        variable, procedure
     }
 
     /**
@@ -105,9 +105,6 @@ public class SymbolTable {
         //todo:从词法分析器获取名字和值
         item.setType(type);
         switch (type){
-            case constant:
-                //todo:
-                break;
             case variable:
                 item.setLevel(level);
                 item.setAddress(address);
