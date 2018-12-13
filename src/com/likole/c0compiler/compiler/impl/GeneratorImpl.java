@@ -2,6 +2,9 @@ package com.likole.c0compiler.compiler.impl;
 
 import com.likole.c0compiler.compiler.Generator;
 import com.likole.c0compiler.entity.Fct;
+import com.likole.c0compiler.entity.Instruction;
+
+import java.util.ArrayList;
 
 /**
  * @author kanghao
@@ -14,10 +17,24 @@ public class GeneratorImpl implements Generator{
      */
     public int cx;
 
+    ArrayList<Instruction> codes=new ArrayList<>();
 
     @Override
     public void generate(Fct fct, int level, int param) {
+        Instruction instruction=new Instruction();
+        instruction.f=fct;
+        instruction.l=level;
+        instruction.a=param;
+        codes.add(instruction);
+        cx++;
+    }
 
+    public int getSize(){
+        return cx;
+    }
+
+    public Instruction getLast(){
+        return codes.get(cx-1);
     }
 
     @Override
