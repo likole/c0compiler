@@ -39,9 +39,9 @@ public class InterpreterImpl implements Interpreter {
                     stack[base(instruction.l, stack, base_addr) + instruction.param] = stack[stack_top];
                     break;
                 case CAL:
-                    stack[stack_top] = base(instruction.l, stack, base_addr);    // 将静态作用域基地址入栈
-                    stack[stack_top + 1] = base_addr;                   // 将动态作用域基地址入栈
-                    stack[stack_top + 2] = ins_num;                     // 将当前指令指针入栈
+//                    stack[stack_top] = base(instruction.l, stack, base_addr);    // 将静态作用域基地址入栈
+                    stack[stack_top] = base_addr;                   // 将动态作用域基地址入栈
+                    stack[stack_top + 1] = ins_num;                     // 将当前指令指针入栈
                     base_addr = stack_top;                              // 改变基地址指针值为新过程的基地址
                     ins_num = instruction.param;                        // 跳转
                     break;
@@ -88,8 +88,8 @@ public class InterpreterImpl implements Interpreter {
                     break;
                 case RET:
                     stack_top = base_addr;
-                    ins_num = stack[stack_top + 2];
-                    base_addr = stack[stack_top + 1];
+                    ins_num = stack[stack_top + 1];
+                    base_addr = stack[stack_top];
                     break;
             }
         } while (ins_num != 0);

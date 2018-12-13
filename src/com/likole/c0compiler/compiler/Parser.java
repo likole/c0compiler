@@ -336,7 +336,7 @@ public class Parser {
                 nxtlev = (SymSet) fsys.clone();
                 expression(nxtlev, lev);
                 // parseExpression将产生一系列指令，但最终结果将会保存在栈顶，执行sto命令完成赋值
-                Compiler.generator.generate(Fct.STO, lev - item.getLevel(), item.getAddress());  //TODO  改指令
+                Compiler.generator.generate(Fct.STO, lev - item.getLevel(), item.getAddress());
             } else {
                 Error.print(12);						// 赋值语句格式错误
             }
@@ -359,9 +359,9 @@ public class Parser {
             if (symbol != Symbol.rparen) Error.print(116);
             loadNextSymbol();
             if (symbol != Symbol.semicolon) Error.print(117);
-            Compiler.generator.generate(Fct.OPR, 0, 1);//TODO
+            Compiler.generator.generate(Fct.RET, 0, 0);//TODO 考虑怎么返回值
         }else if(symbol==Symbol.semicolon){
-            Compiler.generator.generate(Fct.OPR, 0, 1);//TODO
+            Compiler.generator.generate(Fct.RET, 0, 0);
         }else Error.print(115);
     }
 
@@ -378,7 +378,7 @@ public class Parser {
             if (symbol != Symbol.rparen) Error.print(111);
             loadNextSymbol();
             if (symbol != Symbol.semicolon) Error.print(112);
-            Compiler.generator.generate(Fct.OPR, 0, 1);//TODO
+            Compiler.generator.generate(Fct.RED, 0, 0);
         }else test(fsys, facbegsys, lev);
 
     }
@@ -395,7 +395,7 @@ public class Parser {
             if (symbol != Symbol.rparen) Error.print(113);
             loadNextSymbol();
             if (symbol != Symbol.semicolon) Error.print(114);
-            Compiler.generator.generate(Fct.OPR, 0, 1);//TODO
+            Compiler.generator.generate(Fct.WRT, 0, 0);
 
         }
     }
@@ -413,10 +413,11 @@ public class Parser {
             nxtlev = (SymSet) fsys.clone();
             nxtlev.set(Symbol.plus);
             nxtlev.set(Symbol.minus);
+            Compiler.generator.generate(Fct.LIT,0,0);
             term(nxtlev, lev);
             if (addop == Symbol.minus) {
-                Compiler.generator.generate(Fct.OPR, 0, 1);//TODO 改指令
-            }
+                Compiler.generator.generate(Fct.SUB, 0, 0);
+            }else Compiler.generator.generate(Fct.ADD,0,0);
         } else {
             nxtlev = (SymSet) fsys.clone();
             nxtlev.set(Symbol.plus);
@@ -433,9 +434,9 @@ public class Parser {
             nxtlev.set(Symbol.minus);
             term(nxtlev, lev);
             if (addop == Symbol.plus) {
-                Compiler.generator.generate(Fct.OPR, 0, 2);//TODO 改指令
+                Compiler.generator.generate(Fct.ADD, 0, 0);
             } else {
-                Compiler.generator.generate(Fct.OPR, 0, 3);//TODO 改指令
+                Compiler.generator.generate(Fct.SUB, 0, 0);
             }
         }
     }
@@ -457,9 +458,9 @@ public class Parser {
             loadNextSymbol();
             factor(nxtlev, lev);
             if (mulop == Symbol.times) {
-                Compiler.generator.generate(Fct.OPR, 0, 4);//TODO 改指令
+                Compiler.generator.generate(Fct.MUL, 0, 0);
             } else {
-                Compiler.generator.generate(Fct.OPR, 0, 5);//TODO 该指令
+                Compiler.generator.generate(Fct.DIV, 0, 0);
             }
         }
     }
@@ -479,7 +480,7 @@ public class Parser {
                         else Error.print(123);
                         break;
                     case procedure:			// 名字为过程
-                        Compiler.generator.generate(Fct.CAL, lev - item.getLevel(), item.getAddress());//TODO 改指令
+                        Compiler.generator.generate(Fct.CAL, 0, item.getAddress());//TODO 改指令 搞清函数地址
                         break;
                 }
                 loadNextSymbol();
@@ -489,7 +490,7 @@ public class Parser {
                     Error.print(31);
                     num = 0;
                 }
-                Compiler.generator.generate(Fct.LIT, 0, num);//TODO 改指令
+                Compiler.generator.generate(Fct.LIT, 0, num);
                 loadNextSymbol();
             } else if (symbol == Symbol.lparen) {	// 因子为表达式
                 loadNextSymbol();
