@@ -9,6 +9,7 @@ import com.likole.c0compiler.entity.Fct;
 import com.likole.c0compiler.entity.Instruction;
 import com.likole.c0compiler.entity.SymSet;
 import com.likole.c0compiler.entity.Symbol;
+import com.likole.c0compiler.Compiler;
 
 /**
  * Created by likole on 11/22/18.
@@ -300,7 +301,17 @@ public class Parser {
 
     
     public void cycStatement(SymSet fsys, int lev) {
-
+        SymSet nxtlev;
+        loadNextSymbol();
+        if(symbol==Symbol.lparen){
+            loadNextSymbol();
+            nxtlev= (SymSet) fsys.clone();
+            nxtlev.set(Symbol.rparen);
+            expression(nxtlev,lev);
+            if(symbol!=Symbol.rparen) Error.print(119);
+            loadNextSymbol();
+            singleStatement(fsys,lev);
+        }else Error.print(119);
     }
 
     
@@ -467,22 +478,6 @@ public class Parser {
                         Compiler.generator.generate(Fct.CAL, lev - item.getLevel(), item.getAddress());//TODO 改指令
                         break;
                 }
-//                loadNextSymbol();
-                //后一个是(,则可能是函数调用
-//                if (symbol == Symbol.lparen) {
-//                    loadNextSymbol();
-//                    if (symbol != Symbol.rparen) {
-//                        Error.print(100);
-//                        test(fsys, facbegsys, 101);
-//                    }
-//                    Compiler.generator.generate(Fct.CAL,0,2);//TODO 改指令
-//                }else {//变量
-//                    if (item!=null) {
-//                        Compiler.generator.generate(Fct.LOD, lev - item.getLevel(), item.getAddress());
-//                    } else {
-//                        Error.print(11);					// 标识符未声明
-//                    }
-//                }
                 loadNextSymbol();
             }else if (symbol == Symbol.number) {	// 因子为数
                 int num = Compiler.scanner.num;
