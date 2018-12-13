@@ -133,6 +133,10 @@ public class SymbolTable {
         items.add(item);
     }
 
+    public void newItem(int address){
+        items.add(new Item());
+    }
+
     /**
      * 获取符号表的大小
      *
@@ -140,6 +144,10 @@ public class SymbolTable {
      */
     public int getSize() {
         return items.size();
+    }
+
+    public Item getLast(){
+        return items.get(getSize()-1);
     }
 
     public Item getByName(String name) {

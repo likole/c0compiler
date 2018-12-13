@@ -2,11 +2,17 @@ package com.likole.c0compiler.compiler;
 
 import com.likole.c0compiler.entity.Fct;
 
+import java.util.ArrayList;
+
 /**
  * @author kanghao
  * @date 18-11-22 下午3:38
  */
+
+
 public interface Generator {
+
+
 
     /**
      * 生成虚拟机代码

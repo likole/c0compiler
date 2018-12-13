@@ -20,4 +20,28 @@ public class Instruction {
      * 指令参数
      */
     public int a;
+
+    public Fct getF() {
+        return f;
+    }
+
+    public void setF(Fct f) {
+        this.f = f;
+    }
+
+    public int getL() {
+        return l;
+    }
+
+    public void setL(int l) {
+        this.l = l;
+    }
+
+    public int getA() {
+        return a;
+    }
+
+    public void setA(int a) {
+        this.a = a;
+    }
 }
