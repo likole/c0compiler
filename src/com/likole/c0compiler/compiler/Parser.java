@@ -325,7 +325,7 @@ public class Parser {
     public void assignmentStatement(SymSet fsys, int lev) {
         SymbolTable.Item item;
         SymSet nxtlev;
-        item = Compiler.symbolTable.getByName(Compiler.scanner.id);
+        item = Compiler.symbolTable.getByNameScope(Compiler.scanner.id,Compiler.cur_func);
         if (item!=null) {
             if (item.getType()== SymbolTable.Type.variable) {
                 loadNextSymbol();
@@ -372,7 +372,7 @@ public class Parser {
             Error.print(109);
             loadNextSymbol();
             if (symbol != Symbol.ident) Error.print(110);
-            SymbolTable.Item item = Compiler.symbolTable.getByName(Compiler.scanner.id);
+            SymbolTable.Item item = Compiler.symbolTable.getByNameScope(Compiler.scanner.id,Compiler.cur_func);
             if (item.getType() != SymbolTable.Type.variable) Error.print(109);
             loadNextSymbol();
             if (symbol != Symbol.rparen) Error.print(111);
@@ -474,7 +474,9 @@ public class Parser {
                 SymbolTable.Item item = Compiler.symbolTable.getByName(Compiler.scanner.id);
                 switch (item.getType()) {
                     case variable:			// 名字为变量
-                        Compiler.generator.generate(Fct.LOD, lev - item.getLevel(), item.getAddress());
+                        if(item.getScope().equals(Compiler.cur_func))
+                            Compiler.generator.generate(Fct.LOD, lev - item.getLevel(), item.getAddress());
+                        else Error.print(123);
                         break;
                     case procedure:			// 名字为过程
                         Compiler.generator.generate(Fct.CAL, lev - item.getLevel(), item.getAddress());//TODO 改指令
