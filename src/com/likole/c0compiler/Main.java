@@ -31,7 +31,7 @@ public class Main {
 
     private String readFile(File file) throws IOException {
         Long fileLength=file.length();
-        byte[] fileContent=new byte[fileLength.intValue()-1];
+        byte[] fileContent=new byte[fileLength.intValue()];
         FileInputStream fileInputStream=new FileInputStream(file);
         fileInputStream.read(fileContent);
         fileInputStream.close();
@@ -55,10 +55,13 @@ public class Main {
             boolean showSymbolTable=symbolTableCheckBox.isSelected();
             Compiler compiler=new Compiler(code,showObjectCode,showSymbolTable);
             try {
-                if(compiler.compile()){
+                int result=compiler.compile();
+                if(result==0){
                     JOptionPane.showMessageDialog(mainPanel, "编译成功", "编译成功",JOptionPane.INFORMATION_MESSAGE);
+                }else if(result==-1){
+                    JOptionPane.showMessageDialog(mainPanel, "发生了未知的错误，请检查日志", "编译失败",JOptionPane.ERROR_MESSAGE);
                 }else{
-                    JOptionPane.showMessageDialog(mainPanel, "无法编译", "编译错误",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(mainPanel, "编译时发生了"+result+"个错误", "编译失败",JOptionPane.ERROR_MESSAGE);
                 }
             } catch (FileNotFoundException e1) {
                 e1.printStackTrace();

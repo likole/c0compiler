@@ -24,6 +24,7 @@ public class Compiler {
     public static ScannerImpl scanner;
     public static Parser parser;
     public static GeneratorImpl generator;
+    public static String cur_func;
 
     //todo:rename when finished
     public static PrintStream fa;				// 输出虚拟机代码
@@ -32,7 +33,6 @@ public class Compiler {
     public static PrintStream fas;				// 输出名字表
     public static boolean listswitch;			// 显示虚拟机代码与否
     public static boolean tableswitch;			// 显示名字表与否
-    public static String cur_func;              // 当前正在分析的函数名
 
     public Compiler(String code,boolean showObjectCode,boolean showSymbolTable) {
         symbolTable = new SymbolTable();
@@ -44,7 +44,7 @@ public class Compiler {
         Compiler.tableswitch=showSymbolTable;
     }
 
-    boolean compile() throws FileNotFoundException {
+    int compile() throws FileNotFoundException {
         fa=new PrintStream("objectCode");
         fa1=new PrintStream("sourceCode");
         fa2=new PrintStream("result");
@@ -52,10 +52,12 @@ public class Compiler {
         try {
             parser.loadNextSymbol();
             parser.prepare();
+
         } catch (Exception e) {
-            return false;
+            e.printStackTrace();
+            return -1;
         }
-        return (Error.errorCount == 0);
+        return Error.errorCount;
     }
 
 }
