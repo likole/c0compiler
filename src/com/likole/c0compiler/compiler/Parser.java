@@ -1,7 +1,7 @@
 package com.likole.c0compiler.compiler;
 
 
-import com.likole.c0compiler.compiler.Generator;
+import com.likole.c0compiler.Compiler;
 import com.likole.c0compiler.compiler.impl.Constant;
 import com.likole.c0compiler.compiler.utils.Error;
 import com.likole.c0compiler.compiler.utils.SymbolTable;
@@ -133,6 +133,8 @@ public class Parser {
                         if(symbol==Symbol.rparen){
 //                            returnType = intsymbol;
                             Compiler.symbolTable.add(SymbolTable.Type.procedure,0,Compiler.generator.cx-1);
+                            //记录当前分析函数
+                            Compiler.cur_func=Compiler.scanner.id;
                             loadNextSymbol();
                             //分程序
                             block(fsys,1);
@@ -251,7 +253,7 @@ public class Parser {
     public void singleStatement(SymSet fsys, int lev) {
         switch (symbol){
             case ident:
-                assignmentStatement();
+                assignmentStatement(fsys,lev);
                 break;
             case scanfsym:
                 readStatement(fsys,lev);
@@ -264,13 +266,13 @@ public class Parser {
 //                parseCallStatement(fsys, lev);
 //                break;
             case ifsym:
-                condStatement();
+                condStatement(fsys,lev);
                 break;
             case lbrace:
                 statementSeq(fsys,lev);
                 break;
             case whilesym:
-                cycStatement();
+                cycStatement(fsys, lev);
                 break;
             default:
 //                nxtlev = new SymSet(symnum);
@@ -281,13 +283,37 @@ public class Parser {
     }
 
     
-    public void condStatement() {
-
+    public void condStatement(SymSet fsys, int lev) {
+        SymSet nxtlev;
+        loadNextSymbol();
+        if(symbol==Symbol.lparen){
+            loadNextSymbol();
+            nxtlev= (SymSet) fsys.clone();
+            nxtlev.set(Symbol.rparen);
+            expression(nxtlev,lev);
+            if(symbol!=Symbol.rparen) Error.print(118);
+            loadNextSymbol();
+            singleStatement(fsys,lev);
+            if(symbol==Symbol.elsesym){
+                loadNextSymbol();
+                singleStatement(fsys, lev);
+            }
+        }else Error.print(117);
     }
 
     
-    public void cycStatement() {
-
+    public void cycStatement(SymSet fsys, int lev) {
+        SymSet nxtlev;
+        loadNextSymbol();
+        if(symbol==Symbol.lparen){
+            loadNextSymbol();
+            nxtlev= (SymSet) fsys.clone();
+            nxtlev.set(Symbol.rparen);
+            expression(nxtlev,lev);
+            if(symbol!=Symbol.rparen) Error.print(119);
+            loadNextSymbol();
+            singleStatement(fsys,lev);
+        }else Error.print(119);
     }
 
     
@@ -296,7 +322,27 @@ public class Parser {
     }
 
     
-    public void assignmentStatement() {
+    public void assignmentStatement(SymSet fsys, int lev) {
+        SymbolTable.Item item;
+        SymSet nxtlev;
+        item = Compiler.symbolTable.getByName(Compiler.scanner.id);
+        if (item!=null) {
+            if (item.getType()== SymbolTable.Type.variable) {
+                loadNextSymbol();
+                if (symbol == Symbol.becomes)
+                    loadNextSymbol();
+                else
+                    Error.print(13);					// 没有检测到赋值符号
+                nxtlev = (SymSet) fsys.clone();
+                expression(nxtlev, lev);
+                // parseExpression将产生一系列指令，但最终结果将会保存在栈顶，执行sto命令完成赋值
+                Compiler.generator.generate(Fct.STO, lev - item.getLevel(), item.getAddress());  //TODO  改指令
+            } else {
+                Error.print(12);						// 赋值语句格式错误
+            }
+        } else {
+            Error.print(11);							// 变量未找到
+        }
 
     }
 
@@ -434,22 +480,6 @@ public class Parser {
                         Compiler.generator.generate(Fct.CAL, lev - item.getLevel(), item.getAddress());//TODO 改指令
                         break;
                 }
-//                loadNextSymbol();
-                //后一个是(,则可能是函数调用
-//                if (symbol == Symbol.lparen) {
-//                    loadNextSymbol();
-//                    if (symbol != Symbol.rparen) {
-//                        Error.print(100);
-//                        test(fsys, facbegsys, 101);
-//                    }
-//                    Compiler.generator.generate(Fct.CAL,0,2);//TODO 改指令
-//                }else {//变量
-//                    if (item!=null) {
-//                        Compiler.generator.generate(Fct.LOD, lev - item.getLevel(), item.getAddress());
-//                    } else {
-//                        Error.print(11);					// 标识符未声明
-//                    }
-//                }
                 loadNextSymbol();
             }else if (symbol == Symbol.number) {	// 因子为数
                 int num = Compiler.scanner.num;
