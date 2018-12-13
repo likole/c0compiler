@@ -89,7 +89,7 @@ public class ScannerImpl implements Scanner{
         single_num['}'] = Symbol.rbrace;
 
 
-        word=new String[]{"const", "else","if","int","main","printf","return","scanf","void","while"};
+        word=new String[]{"else","if","int","main","printf","return","scanf","void","while"};
         word_num=new Symbol[11];
         word_num[0]=Symbol.elsesym;
         word_num[1]=Symbol.ifsym;
