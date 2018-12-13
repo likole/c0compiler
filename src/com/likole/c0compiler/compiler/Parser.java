@@ -264,13 +264,13 @@ public class Parser {
 //                parseCallStatement(fsys, lev);
 //                break;
             case ifsym:
-                condStatement();
+                condStatement(fsys,lev);
                 break;
             case lbrace:
                 statementSeq(fsys,lev);
                 break;
             case whilesym:
-                cycStatement();
+                cycStatement(fsys, lev);
                 break;
             default:
 //                nxtlev = new SymSet(symnum);
@@ -281,12 +281,26 @@ public class Parser {
     }
 
     
-    public void condStatement() {
-
+    public void condStatement(SymSet fsys, int lev) {
+        SymSet nxtlev;
+        loadNextSymbol();
+        if(symbol==Symbol.lparen){
+            loadNextSymbol();
+            nxtlev= (SymSet) fsys.clone();
+            nxtlev.set(Symbol.rparen);
+            expression(nxtlev,lev);
+            if(symbol!=Symbol.rparen) Error.print(118);
+            loadNextSymbol();
+            singleStatement(fsys,lev);
+            if(symbol==Symbol.elsesym){
+                loadNextSymbol();
+                singleStatement(fsys, lev);
+            }
+        }else Error.print(117);
     }
 
     
-    public void cycStatement() {
+    public void cycStatement(SymSet fsys, int lev) {
 
     }
 
