@@ -106,7 +106,7 @@ public class Parser {
                     case comma:
                         //[<变量定义部分>]
                         Compiler.scanner.id=temp;
-                        Compiler.symbolTable.add(SymbolTable.Type.variable,0,dx++);
+                        Compiler.symbolTable.add(SymbolTable.Type.variable,0,dx++,Compiler.cur_func);
                         while (symbol == Symbol.comma) {
                             loadNextSymbol();
                             varDeclaration(0);
