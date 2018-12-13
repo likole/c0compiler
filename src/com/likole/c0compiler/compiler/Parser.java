@@ -155,6 +155,7 @@ public class Parser {
         //<主函数>
         if (symbol == Symbol.voidsym)
         {
+            loadNextSymbol();
             if (symbol == Symbol.mainsym) {
                 if (symbol == Symbol.lparen) {
                     loadNextSymbol();

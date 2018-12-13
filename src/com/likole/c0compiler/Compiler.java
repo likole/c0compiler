@@ -46,6 +46,7 @@ public class Compiler {
     }
 
     int compile() throws FileNotFoundException {
+        Error.errorCount=0;
         fa=new PrintStream("objectCode");
         fa1=new PrintStream("sourceCode");
         fa2=new PrintStream("result");
