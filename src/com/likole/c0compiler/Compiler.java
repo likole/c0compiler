@@ -24,6 +24,7 @@ public class Compiler {
     public static ScannerImpl scanner;
     public static Parser parser;
     public static GeneratorImpl generator;
+    public static String cur_func;
 
     //todo:rename when finished
     public static PrintStream fa;				// 输出虚拟机代码
