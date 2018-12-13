@@ -1,7 +1,7 @@
 package com.likole.c0compiler.compiler;
 
 
-import com.likole.c0compiler.compiler.Generator;
+import com.likole.c0compiler.Compiler;
 import com.likole.c0compiler.compiler.impl.Constant;
 import com.likole.c0compiler.compiler.utils.Error;
 import com.likole.c0compiler.compiler.utils.SymbolTable;
@@ -9,7 +9,6 @@ import com.likole.c0compiler.entity.Fct;
 import com.likole.c0compiler.entity.Instruction;
 import com.likole.c0compiler.entity.SymSet;
 import com.likole.c0compiler.entity.Symbol;
-import com.likole.c0compiler.Compiler;
 
 /**
  * Created by likole on 11/22/18.
@@ -251,7 +250,7 @@ public class Parser {
     public void singleStatement(SymSet fsys, int lev) {
         switch (symbol){
             case ident:
-                assignmentStatement();
+                assignmentStatement(fsys,lev);
                 break;
             case scanfsym:
                 readStatement(fsys,lev);
@@ -310,7 +309,27 @@ public class Parser {
     }
 
     
-    public void assignmentStatement() {
+    public void assignmentStatement(SymSet fsys, int lev) {
+        SymbolTable.Item item;
+        SymSet nxtlev;
+        item = Compiler.symbolTable.getByName(Compiler.scanner.id);
+        if (item!=null) {
+            if (item.getType()== SymbolTable.Type.variable) {
+                loadNextSymbol();
+                if (symbol == Symbol.becomes)
+                    loadNextSymbol();
+                else
+                    Error.print(13);					// 没有检测到赋值符号
+                nxtlev = (SymSet) fsys.clone();
+                expression(nxtlev, lev);
+                // parseExpression将产生一系列指令，但最终结果将会保存在栈顶，执行sto命令完成赋值
+                Compiler.generator.generate(Fct.STO, lev - item.getLevel(), item.getAddress());  //TODO  改指令
+            } else {
+                Error.print(12);						// 赋值语句格式错误
+            }
+        } else {
+            Error.print(11);							// 变量未找到
+        }
 
     }
 
