@@ -9,7 +9,6 @@ import com.likole.c0compiler.entity.Fct;
 import com.likole.c0compiler.entity.Instruction;
 import com.likole.c0compiler.entity.SymSet;
 import com.likole.c0compiler.entity.Symbol;
-import com.likole.c0compiler.Compiler;
 
 /**
  * Created by likole on 11/22/18.
@@ -114,7 +113,7 @@ public class Parser {
                         if(symbol==Symbol.semicolon){
                             loadNextSymbol();
                             Compiler.generator.generate(Fct.INT,0,0);
-//                            code[0].a = dx;
+//                            code[0].param = dx;
                         }else{
                             //漏掉了分号
                             Error.print(5);
@@ -125,7 +124,7 @@ public class Parser {
                         Compiler.symbolTable.add(SymbolTable.Type.variable,0,dx++);
                         loadNextSymbol();
                         Compiler.generator.generate(Fct.INT,0,0);
-//                            code[0].a = dx;
+//                            code[0].param = dx;
                         break;
                     case lparen:
                         //todo:function index
@@ -236,7 +235,7 @@ public class Parser {
             Error.print(5);
         }
         previousItem.setSize(dx);
-        previousInstruction.setA(dx);
+        previousInstruction.setParam(dx);
     }
 
     /**

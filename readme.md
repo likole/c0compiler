@@ -27,15 +27,15 @@
 | pl0        |c0        | description|
 |------------|----------|------|
 | LIT 0 2	 | LIT 0 a  |                      |
-| LOD L a	 | LOD t a	|a为相对地址，t为层数      |
-| STP L a	 | STO t a  |                      |
+| LOD L a	 | LOD t a  |a为相对地址，t为层数      |
+| STO L a	 | STO t a  |将栈顶内容送入某变量单元中，a为相对地址，t为层数 |
 | CAL t a	 | CAL 0 a  |                      |
-| INT 0 a	 | INT 0 a  |                      |
-| JMP 0 a	 | JMP 0 a  |                      |
+| INT 0 a	 | INT 0 a  |为函数开辟a个空间                      |
+| JMP 0 a	 | JMP 0 a  |无条件跳转                      |
 | JPC 0 a	 | JPC 0 a	|当栈顶值为0则跳转至a地址        |
-| OPR 0 2	 | ADD 0 0	|次栈顶与栈顶相加             |
-| OPR 0 3	 | SUB 0 0	|次栈顶减去栈顶              |
-| OPR 0 4	 | MUL 0 0	|次栈顶乘以栈顶              |
+| OPR 0 2	 | ADD 0 0	|次栈顶与栈顶相加，退两个栈元素，结果值进栈             |
+| OPR 0 3	 | SUB 0 0	|次栈顶减去栈顶，退两个栈元素，结果值进栈              |
+| OPR 0 4	 | MUL 0 0	|次栈顶乘以栈顶，退两个栈元素，结果值进栈              |
 | OPR 0 5	 | DIV 0 0	|次栈顶除以栈顶              |
 | OPR 0 16	 | RED 0 0	|从命令行读入一个输入置于栈顶       |
 | OPR 0 14                                    |

@@ -9,7 +9,7 @@ public class Instruction {
     /**
      * 虚拟机代码指令
      */
-    public Fct f;
+    public Fct action;
 
     /**
      * 引用层与声明层的层次差
@@ -19,14 +19,14 @@ public class Instruction {
     /**
      * 指令参数
      */
-    public int a;
+    public int param;
 
-    public Fct getF() {
-        return f;
+    public Fct getAction() {
+        return action;
     }
 
-    public void setF(Fct f) {
-        this.f = f;
+    public void setAction(Fct action) {
+        this.action = action;
     }
 
     public int getL() {
@@ -37,11 +37,11 @@ public class Instruction {
         this.l = l;
     }
 
-    public int getA() {
-        return a;
+    public int getParam() {
+        return param;
     }
 
-    public void setA(int a) {
-        this.a = a;
+    public void setParam(int param) {
+        this.param = param;
     }
 }

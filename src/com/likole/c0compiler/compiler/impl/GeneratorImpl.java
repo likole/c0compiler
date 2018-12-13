@@ -22,9 +22,9 @@ public class GeneratorImpl implements Generator{
     @Override
     public void generate(Fct fct, int level, int param) {
         Instruction instruction=new Instruction();
-        instruction.f=fct;
+        instruction.action =fct;
         instruction.l=level;
-        instruction.a=param;
+        instruction.param =param;
         codes.add(instruction);
         cx++;
     }

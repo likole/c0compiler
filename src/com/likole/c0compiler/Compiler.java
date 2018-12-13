@@ -31,6 +31,7 @@ public class Compiler {
     public static PrintStream fa1;				// 输出源文件及其各行对应的首地址
     public static PrintStream fa2;				// 输出结果
     public static PrintStream fas;				// 输出名字表
+    public static BufferedReader stdin;         // 命令行输入
     public static boolean listswitch;			// 显示虚拟机代码与否
     public static boolean tableswitch;			// 显示名字表与否
 
