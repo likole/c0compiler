@@ -7,11 +7,17 @@ package com.likole.c0compiler.interpreter;
 public interface Interpreter {
 
 
+    final int stacksize=500;
+
     /**
      * 解释程序
      */
     void interpret();
 
+    /**
+     * 输出到文件
+     */
+    void print();
     /**
      * 通过给定的层次差来获得该层的堆栈帧基地址
      * @param l 目标层次与当前层次的层次差

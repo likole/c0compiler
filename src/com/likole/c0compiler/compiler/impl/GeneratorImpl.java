@@ -17,7 +17,7 @@ public class GeneratorImpl implements Generator{
      */
     public int cx;
 
-    ArrayList<Instruction> codes=new ArrayList<>();
+    public ArrayList<Instruction> codes=new ArrayList<>();
 
     @Override
     public void generate(Fct fct, int level, int param) {
