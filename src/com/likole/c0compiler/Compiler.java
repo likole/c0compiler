@@ -32,6 +32,7 @@ public class Compiler {
     public static PrintStream fas;				// 输出名字表
     public static boolean listswitch;			// 显示虚拟机代码与否
     public static boolean tableswitch;			// 显示名字表与否
+    public static String cur_func;              // 当前正在分析的函数名
 
     public Compiler(String code,boolean showObjectCode,boolean showSymbolTable) {
         symbolTable = new SymbolTable();
@@ -50,7 +51,7 @@ public class Compiler {
         fas=new PrintStream("symbolTable");
         try {
             parser.loadNextSymbol();
-            parser.parse();
+            parser.prepare();
         } catch (Exception e) {
             return false;
         }

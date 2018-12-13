@@ -51,6 +51,10 @@ public class SymbolTable {
          * 返回值类型
          */
         private Symbol returnType;
+        /**
+         * 作用域
+         */
+        private String scope;
 
         public Symbol getReturnType() {
             return returnType;
@@ -107,6 +111,14 @@ public class SymbolTable {
         public void setSize(int size) {
             this.size = size;
         }
+
+        public String getScope() {
+            return scope;
+        }
+
+        public void setScope(String scope) {
+            this.scope = scope;
+        }
     }
 
     /**
@@ -123,6 +135,25 @@ public class SymbolTable {
             case variable:
                 item.setLevel(level);
                 item.setAddress(address);
+                break;
+            case procedure:
+                item.setLevel(level);
+                break;
+            default:
+                break;
+        }
+        items.add(item);
+    }
+
+    public void add(Type type, int level, int address,String scpoe) {
+        Item item = new Item();
+        item.name = Compiler.scanner.id;
+        item.setType(type);
+        switch (type) {
+            case variable:
+                item.setLevel(level);
+                item.setAddress(address);
+                item.setScope(scpoe);
                 break;
             case procedure:
                 item.setLevel(level);
@@ -157,6 +188,23 @@ public class SymbolTable {
             }
         }
         return null;
+    }
+
+    public Item getByNameScope(String name,String scope){
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).getName().equals(name)&&items.get(i).getScope().equals(scope)) {
+                return items.get(i);
+            }
+        }
+        return null;
+    }
+
+    public void print(){
+        Compiler.fas.println("Name\tType\tValue\tLevel\tAddress\tSize\tretType\tScope");
+        for(Item item:items) {
+            Compiler.fas.println(item.getName()+"\t"+item.getType()+"\t"+item.getValue()+"\t"+item.getLevel()+"\t"+item.getAddress()+"\t"+item.getSize()+"\t"+item.getReturnType()+"\t"+item.getScope());
+        }
+        return ;
     }
 
 }

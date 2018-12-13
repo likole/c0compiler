@@ -78,12 +78,12 @@ public class Parser {
 
 
     
-    public void prepare(SymSet fsys, int lev) {
+    public void prepare() {
         SymSet nxtlev = new SymSet(Constant.symnum);
         nxtlev.or(declbegsys);
         nxtlev.or(statbegsys);
         nxtlev.set(Symbol.period);
-        parse(fsys);
+        parse(nxtlev);
     }
 
     /**
@@ -133,6 +133,8 @@ public class Parser {
                         if(symbol==Symbol.rparen){
 //                            returnType = intsymbol;
                             Compiler.symbolTable.add(SymbolTable.Type.procedure,0,Compiler.generator.cx-1);
+                            //记录当前分析函数
+                            Compiler.cur_func=Compiler.scanner.id;
                             loadNextSymbol();
                             //分程序
                             block(fsys,1);
