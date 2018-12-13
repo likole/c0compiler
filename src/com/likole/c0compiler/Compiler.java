@@ -1,14 +1,10 @@
 package com.likole.c0compiler;
 
-import com.likole.c0compiler.compiler.Generator;
-import com.likole.c0compiler.compiler.Parser;
-import com.likole.c0compiler.compiler.Scanner;
 import com.likole.c0compiler.compiler.impl.GeneratorImpl;
-import com.likole.c0compiler.compiler.impl.ParserImpl;
+import com.likole.c0compiler.compiler.Parser;
 import com.likole.c0compiler.compiler.impl.ScannerImpl;
 import com.likole.c0compiler.compiler.utils.Error;
 import com.likole.c0compiler.compiler.utils.SymbolTable;
-import com.likole.c0compiler.interpreter.Interpreter;
 import com.likole.c0compiler.interpreter.impl.InterpreterImpl;
 
 import java.io.BufferedReader;
@@ -26,7 +22,7 @@ public class Compiler {
     public static SymbolTable symbolTable;
     public static InterpreterImpl interpreter;
     public static ScannerImpl scanner;
-    public static ParserImpl parser;
+    public static Parser parser;
     public static GeneratorImpl generator;
 
     //todo:rename when finished
@@ -41,7 +37,7 @@ public class Compiler {
         symbolTable = new SymbolTable();
         interpreter = new InterpreterImpl();
         scanner = new ScannerImpl(new BufferedReader(new StringReader(code)));
-        parser = new ParserImpl();
+        parser = new Parser();
         generator=new GeneratorImpl();
         Compiler.listswitch=showObjectCode;
         Compiler.tableswitch=showSymbolTable;

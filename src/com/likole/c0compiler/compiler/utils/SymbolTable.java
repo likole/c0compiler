@@ -1,5 +1,8 @@
 package com.likole.c0compiler.compiler.utils;
 
+import com.likole.c0compiler.Compiler;
+import com.likole.c0compiler.entity.Symbol;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +47,18 @@ public class SymbolTable {
          * 需分配的数据区大小(procedure使用)
          */
         private int size;
+        /**
+         * 返回值类型
+         */
+        private Symbol returnType;
+
+        public Symbol getReturnType() {
+            return returnType;
+        }
+
+        public void setReturnType(Symbol returnType) {
+            this.returnType = returnType;
+        }
 
         public String getName() {
             return name;
@@ -100,11 +115,11 @@ public class SymbolTable {
     private List<Item> items = new ArrayList<>();
 
 
-    public void add(Type type, int level,int address) {
-        Item item=new Item();
-        //todo:从词法分析器获取名字和值
+    public void add(Type type, int level, int address) {
+        Item item = new Item();
+        item.name = Compiler.scanner.id;
         item.setType(type);
-        switch (type){
+        switch (type) {
             case variable:
                 item.setLevel(level);
                 item.setAddress(address);
@@ -112,12 +127,15 @@ public class SymbolTable {
             case procedure:
                 item.setLevel(level);
                 break;
+            default:
+                break;
         }
         items.add(item);
     }
 
     /**
      * 获取符号表的大小
+     *
      * @return
      */
     public int getSize() {
@@ -126,7 +144,9 @@ public class SymbolTable {
 
     public Item getByName(String name) {
         for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).getName().equals(name)) return items.get(i);
+            if (items.get(i).getName().equals(name)) {
+                return items.get(i);
+            }
         }
         return null;
     }
