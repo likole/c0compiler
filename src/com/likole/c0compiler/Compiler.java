@@ -43,18 +43,20 @@ public class Compiler {
         Compiler.tableswitch=showSymbolTable;
     }
 
-    boolean compile() throws FileNotFoundException {
+    int compile() throws FileNotFoundException {
         fa=new PrintStream("objectCode");
         fa1=new PrintStream("sourceCode");
         fa2=new PrintStream("result");
         fas=new PrintStream("symbolTable");
         try {
             parser.loadNextSymbol();
-            parser.parse();
+            parser.prepare();
+
         } catch (Exception e) {
-            return false;
+            e.printStackTrace();
+            return -1;
         }
-        return (Error.errorCount == 0);
+        return Error.errorCount;
     }
 
 }

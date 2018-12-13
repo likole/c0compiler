@@ -78,12 +78,12 @@ public class Parser {
 
 
     
-    public void prepare(SymSet fsys, int lev) {
+    public void prepare() {
         SymSet nxtlev = new SymSet(Constant.symnum);
         nxtlev.or(declbegsys);
         nxtlev.or(statbegsys);
         nxtlev.set(Symbol.period);
-        parse(fsys);
+        parse(nxtlev);
     }
 
     /**
