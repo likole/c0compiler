@@ -1,6 +1,5 @@
 package com.likole.c0compiler.compiler.impl;
 
-import com.likole.c0compiler.compiler.Parser;
 import com.likole.c0compiler.compiler.Scanner;
 import com.likole.c0compiler.compiler.impl.GeneratorImpl;
 import com.likole.c0compiler.compiler.utils.SymbolTable;

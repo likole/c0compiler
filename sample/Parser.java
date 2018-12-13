@@ -117,7 +117,7 @@ public class Parser {
 		tx0 = table.tx;					// 记录本层名字的初始位置（以便恢复）
 		table.get(table.tx).adr = interp.cx;
 		
-		interp.gen(Fct.JMP, 0, 0);
+		interp.gen(Fct.JMP, 0, 0//);
 		
 		if (lev > PL0.levmax)
 			Err.report(32);
