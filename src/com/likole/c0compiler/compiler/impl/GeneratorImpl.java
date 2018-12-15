@@ -1,5 +1,6 @@
 package com.likole.c0compiler.compiler.impl;
 
+import com.likole.c0compiler.Compiler;
 import com.likole.c0compiler.compiler.Generator;
 import com.likole.c0compiler.entity.Fct;
 import com.likole.c0compiler.entity.Instruction;
@@ -39,6 +40,9 @@ public class GeneratorImpl implements Generator{
 
     @Override
     public void listcode(int start) {
-
+        Compiler.fa.println("-\t-\t-\t-\t");
+        for (int i=0;i<codes.size();i++){
+            Compiler.fa.println(i+"\t"+codes.get(i).toString());
+        }
     }
 }

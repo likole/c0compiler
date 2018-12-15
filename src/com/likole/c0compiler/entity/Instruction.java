@@ -44,4 +44,10 @@ public class Instruction {
     public void setParam(int param) {
         this.param = param;
     }
+
+    @Override
+    public String toString() {
+        return action+"\t"+l+"\t"+param;
+    }
 }
+

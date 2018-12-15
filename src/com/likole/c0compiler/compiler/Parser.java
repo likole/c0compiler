@@ -21,6 +21,7 @@ public class Parser {
 
     /**
      * 当前符号，由nextsym()读入
+     *
      * @see #loadNextSymbol()
      */
     private Symbol symbol;
@@ -45,7 +46,7 @@ public class Parser {
         statbegsys.set(Symbol.ident);
         statbegsys.set(Symbol.ifsym);
         statbegsys.set(Symbol.whilesym);
-        statbegsys.set(Symbol.retsym);			// thanks to elu
+        statbegsys.set(Symbol.retsym);            // thanks to elu
         statbegsys.set(Symbol.scanfsym);
         statbegsys.set(Symbol.printfsym);
 
@@ -58,7 +59,7 @@ public class Parser {
 
     }
 
-    
+
     public void test(SymSet s1, SymSet s2, int errorcode) {
         if (!s1.get(symbol)) {
             Error.print(errorcode);
@@ -69,14 +70,13 @@ public class Parser {
         }
     }
 
-    
+
     public void loadNextSymbol() {
         Compiler.scanner.getsym();
-        symbol= Compiler.scanner.symbol;
+        symbol = Compiler.scanner.symbol;
     }
 
 
-    
     public void prepare() {
         SymSet nxtlev = new SymSet(Constant.symnum);
         nxtlev.or(declbegsys);
@@ -92,52 +92,50 @@ public class Parser {
         dx = 3;
 
         SymSet nxtlev = new SymSet(Constant.symnum);
-
+        Compiler.generator.generate(Fct.INT, 0, 0);
         Compiler.generator.generate(Fct.JMP, 0, 0);
 
         //分析[<变量定义部分>]{<自定义函数定义部分>}
         if (symbol == Symbol.intsym) {
             loadNextSymbol();
-            String temp=Compiler.scanner.id;
-            if(symbol==Symbol.ident){
+            String temp = Compiler.scanner.id;
+            if (symbol == Symbol.ident) {
                 loadNextSymbol();
-                switch (symbol){
+                switch (symbol) {
                     case comma:
                         //[<变量定义部分>]
-                        Compiler.scanner.id=temp;
-                        Compiler.symbolTable.add(SymbolTable.Type.variable,0,dx++,Compiler.cur_func);
+                        Compiler.scanner.id = temp;
+                        Compiler.symbolTable.add(SymbolTable.Type.variable,0, dx++, Compiler.cur_func);
                         while (symbol == Symbol.comma) {
                             loadNextSymbol();
                             varDeclaration(0);
                         }
-                        if(symbol==Symbol.semicolon){
+                        if (symbol == Symbol.semicolon) {
                             loadNextSymbol();
-                            Compiler.generator.generate(Fct.INT,0,0);
-//                            code[0].param = dx;
-                        }else{
+                            Compiler.generator.codes.get(0).setParam(dx);
+                        } else {
                             //漏掉了分号
                             Error.print(5);
                         }
                         break;
                     case semicolon:
-                        Compiler.scanner.id=temp;
-                        Compiler.symbolTable.add(SymbolTable.Type.variable,0,dx++);
+                        Compiler.scanner.id = temp;
+                        Compiler.symbolTable.add(SymbolTable.Type.variable,0, dx++, Compiler.cur_func);
                         loadNextSymbol();
-                        Compiler.generator.generate(Fct.INT,0,0);
-//                            code[0].param = dx;
+                        Compiler.generator.codes.get(0).setParam(dx);
                         break;
                     case lparen:
                         //todo:function index
                         loadNextSymbol();
-                        if(symbol==Symbol.rparen){
+                        if (symbol == Symbol.rparen) {
 //                            returnType = intsymbol;
-                            Compiler.symbolTable.add(SymbolTable.Type.procedure,0,Compiler.generator.cx-1);
+                            Compiler.symbolTable.add(SymbolTable.Type.procedure,0, Compiler.generator.cx - 1, Symbol.intsym);
                             //记录当前分析函数
-                            Compiler.cur_func=Compiler.scanner.id;
+                            Compiler.cur_func = Compiler.scanner.id;
                             loadNextSymbol();
                             //分程序
-                            block(fsys,1);
-                        }else {
+                            block(fsys, 1);
+                        } else {
                             //漏掉了）
                             Error.print(4);
                         }
@@ -150,37 +148,40 @@ public class Parser {
             }
         }
 
-
-        //xxx
-        //<主函数>
-        if (symbol == Symbol.voidsym)
-        {
+        //<函数>
+        while (symbol == Symbol.voidsym || symbol == Symbol.intsym) {
+            Symbol retType = symbol;
             loadNextSymbol();
             if (symbol == Symbol.mainsym) {
+                loadNextSymbol();
                 if (symbol == Symbol.lparen) {
                     loadNextSymbol();
-                    if (symbol == Symbol.rparen) {
-                        loadNextSymbol();
-                    } else {
-                        //)
-                        Error.print(5);
-                    }
-                } else {
-                    //(
-                    Error.print(5);
-                }
-            } else {
-                //main
-                Error.print(4);
-            }
-        } else
+                    if (symbol != Symbol.rparen) Error.print(5);
+                    //设置JMP指令到主函数的指令位置
+                    Compiler.generator.codes.get(1).setParam(Compiler.generator.cx);
+                    Compiler.symbolTable.add(SymbolTable.Type.procedure,0, Compiler.generator.cx-1, retType);
+                    loadNextSymbol();
+                    block(fsys, 1);
+                } else Error.print(5);
+            } else if (symbol == Symbol.ident) {
+                loadNextSymbol();
+                if (symbol == Symbol.lparen) {
+                    loadNextSymbol();
+                    if (symbol != Symbol.rparen) Error.print(4);
+                    Compiler.symbolTable.add(SymbolTable.Type.procedure,0, Compiler.generator.cx - 1, retType);
+                    //记录当前分析函数
+                    Compiler.cur_func = Compiler.scanner.id;
+                    loadNextSymbol();
+                    //分程序
+                    block(fsys, 1);
+                } else Error.print(5);
 
-        {
-            //void
-            Error.print(4);
+            } else Error.print(4);
+
         }
 
-        block(fsys,1);
+//        loadNextSymbol();
+//        block(fsys, 1);
 
     }
 
@@ -190,7 +191,7 @@ public class Parser {
      */
     void varDeclaration(int level) {
         if (symbol == Symbol.ident) {
-            Compiler.symbolTable.add(SymbolTable.Type.variable, level, dx++);
+            Compiler.symbolTable.add(SymbolTable.Type.variable,level, dx++, Compiler.cur_func);
             loadNextSymbol();
         } else {
             //int 应是标识符
@@ -202,17 +203,14 @@ public class Parser {
      * <分程序> := '{' [<变量定义部分>] <语句序列> '}'
      */
     public void block(SymSet fsys, int lev) {
-        if (symbol != Symbol.lbrace) {
-            //{
+        if (symbol != Symbol.lbrace)
             Error.print(5);
-        }
-        SymbolTable.Item previousItem= Compiler.symbolTable.getLast();
-        Instruction previousInstruction=Compiler.generator.getLast();
-        int cx0=Compiler.generator.cx;
+        Compiler.generator.generate(Fct.INT, 0, 0);
+        SymbolTable.Item previousItem = Compiler.symbolTable.getLast();
+        Instruction previousInstruction = Compiler.generator.getLast();
+        previousItem.setAddress(Compiler.generator.cx-1);
 
-        previousItem.setAddress(Compiler.generator.cx);
-        Compiler.generator.generate(Fct.INT,0,0);
-        dx=3;
+        dx = 3;
         loadNextSymbol();
         //分析[<变量定义部分>]
         if (symbol == Symbol.intsym) {
@@ -230,46 +228,51 @@ public class Parser {
             }
         }
         //分析<语句序列>
-        statementSeq(fsys,lev);
+        statementSeq(fsys, lev);
         if (symbol != Symbol.rbrace) {
-            //}
             Error.print(5);
         }
+        loadNextSymbol();
         previousItem.setSize(dx);
         previousInstruction.setParam(dx);
+        Compiler.generator.generate(Fct.RET,0,0);
     }
 
     /**
      * <语句序列> := <语句> {<语句>}
      */
     public void statementSeq(SymSet fsys, int lev) {
-        singleStatement(fsys,lev);
+        singleStatement(fsys, lev);
         while (statbegsys.get(symbol)) {
-            singleStatement(fsys,lev);
+            singleStatement(fsys, lev);
         }
 
     }
-    
+
     public void singleStatement(SymSet fsys, int lev) {
-        switch (symbol){
+        switch (symbol) {
             case ident:
-                assignmentStatement(fsys,lev);
+                String tmpIdent=Compiler.scanner.id;
+                loadNextSymbol();
+                if(symbol==Symbol.lparen){
+                    loadNextSymbol();
+                    if(symbol!=Symbol.rparen)Error.print(123);
+                    SymbolTable.Item item=Compiler.symbolTable.getByName(tmpIdent);
+                    Compiler.generator.generate(Fct.CAL,0,item.getAddress());
+                    loadNextSymbol();
+                }else assignmentStatement(fsys,lev,tmpIdent);
                 break;
             case scanfsym:
-                readStatement(fsys,lev);
+                readStatement(fsys, lev);
                 break;
             case printfsym:
-                writeStatement(fsys,lev);
+                writeStatement(fsys, lev);
                 break;
-                //函数调用语句
-//            case :
-//                parseCallStatement(fsys, lev);
-//                break;
             case ifsym:
-                condStatement(fsys,lev);
+                condStatement(fsys, lev);
                 break;
             case lbrace:
-                statementSeq(fsys,lev);
+                statementSeq(fsys, lev);
                 break;
             case whilesym:
                 cycStatement(fsys, lev);
@@ -279,73 +282,61 @@ public class Parser {
 //                test(fsys, nxtlev, 19);
                 break;
         }
-
+        if(symbol!=Symbol.semicolon) Error.print(112);
+        loadNextSymbol();
     }
 
-    
+
     public void condStatement(SymSet fsys, int lev) {
         SymSet nxtlev;
         loadNextSymbol();
-        if(symbol==Symbol.lparen){
+        if (symbol == Symbol.lparen) {
             loadNextSymbol();
-            nxtlev= (SymSet) fsys.clone();
+            nxtlev = (SymSet) fsys.clone();
             nxtlev.set(Symbol.rparen);
-            expression(nxtlev,lev);
-            if(symbol!=Symbol.rparen) Error.print(118);
+            expression(nxtlev, lev);
+            if (symbol != Symbol.rparen) Error.print(118);
             loadNextSymbol();
-            singleStatement(fsys,lev);
-            if(symbol==Symbol.elsesym){
+            singleStatement(fsys, lev);
+            if (symbol == Symbol.elsesym) {
                 loadNextSymbol();
                 singleStatement(fsys, lev);
             }
-        }else Error.print(117);
+        } else Error.print(117);
     }
 
-    
+
     public void cycStatement(SymSet fsys, int lev) {
         SymSet nxtlev;
         loadNextSymbol();
-        if(symbol==Symbol.lparen){
+        if (symbol == Symbol.lparen) {
             loadNextSymbol();
-            nxtlev= (SymSet) fsys.clone();
+            nxtlev = (SymSet) fsys.clone();
             nxtlev.set(Symbol.rparen);
-            expression(nxtlev,lev);
-            if(symbol!=Symbol.rparen) Error.print(119);
+            expression(nxtlev, lev);
+            if (symbol != Symbol.rparen) Error.print(119);
             loadNextSymbol();
-            singleStatement(fsys,lev);
-        }else Error.print(119);
+            singleStatement(fsys, lev);
+        } else Error.print(119);
     }
 
-    
-    public void callStatement() {
 
-    }
-
-    
-    public void assignmentStatement(SymSet fsys, int lev) {
-        SymbolTable.Item item;
+    public void assignmentStatement(SymSet fsys, int lev,String ident) {
         SymSet nxtlev;
-        item = Compiler.symbolTable.getByNameScope(Compiler.scanner.id,Compiler.cur_func);
-        if (item!=null) {
-            if (item.getType()== SymbolTable.Type.variable) {
-                loadNextSymbol();
-                if (symbol == Symbol.becomes)
-                    loadNextSymbol();
-                else
-                    Error.print(13);					// 没有检测到赋值符号
+        SymbolTable.Item item = Compiler.symbolTable.getByNameScope(ident, Compiler.cur_func);
+        if (item != null) {
+            if (item.getType() != SymbolTable.Type.variable) Error.print(111);
+                if (symbol != Symbol.becomes) Error.print(111);
+                loadNextSymbol();               // 没有检测到赋值符号
                 nxtlev = (SymSet) fsys.clone();
                 expression(nxtlev, lev);
                 // parseExpression将产生一系列指令，但最终结果将会保存在栈顶，执行sto命令完成赋值
                 Compiler.generator.generate(Fct.STO, lev - item.getLevel(), item.getAddress());
-            } else {
-                Error.print(12);						// 赋值语句格式错误
-            }
         } else {
-            Error.print(11);							// 变量未找到
+            Error.print(111);                            // 变量未找到
         }
 
     }
-
 
 
     public void retStatement(SymSet fsys, int lev) {
@@ -360,26 +351,24 @@ public class Parser {
             loadNextSymbol();
             if (symbol != Symbol.semicolon) Error.print(117);
             Compiler.generator.generate(Fct.RET, 0, 0);//TODO 考虑怎么返回值
-        }else if(symbol==Symbol.semicolon){
+        } else if (symbol == Symbol.semicolon) {
             Compiler.generator.generate(Fct.RET, 0, 0);
-        }else Error.print(115);
+        } else Error.print(115);
     }
 
 
     public void readStatement(SymSet fsys, int lev) {
         loadNextSymbol();
         if (symbol == Symbol.lparen) {
-            Error.print(109);
             loadNextSymbol();
             if (symbol != Symbol.ident) Error.print(110);
-            SymbolTable.Item item = Compiler.symbolTable.getByNameScope(Compiler.scanner.id,Compiler.cur_func);
+            SymbolTable.Item item = Compiler.symbolTable.getByNameScope(Compiler.scanner.id, Compiler.cur_func);
             if (item.getType() != SymbolTable.Type.variable) Error.print(109);
             loadNextSymbol();
             if (symbol != Symbol.rparen) Error.print(111);
             loadNextSymbol();
-            if (symbol != Symbol.semicolon) Error.print(112);
             Compiler.generator.generate(Fct.RED, 0, 0);
-        }else test(fsys, facbegsys, lev);
+        } else test(fsys, facbegsys, lev);
 
     }
 
@@ -394,15 +383,13 @@ public class Parser {
             expression(fsys, lev);
             if (symbol != Symbol.rparen) Error.print(113);
             loadNextSymbol();
-            if (symbol != Symbol.semicolon) Error.print(114);
             Compiler.generator.generate(Fct.WRT, 0, 0);
 
         }
     }
 
 
-    
-    public void expression(SymSet fsys,int lev) {
+    public void expression(SymSet fsys, int lev) {
         Symbol addop;
         SymSet nxtlev;
 
@@ -413,11 +400,11 @@ public class Parser {
             nxtlev = (SymSet) fsys.clone();
             nxtlev.set(Symbol.plus);
             nxtlev.set(Symbol.minus);
-            Compiler.generator.generate(Fct.LIT,0,0);
+            Compiler.generator.generate(Fct.LIT, 0, 0);
             term(nxtlev, lev);
             if (addop == Symbol.minus) {
                 Compiler.generator.generate(Fct.SUB, 0, 0);
-            }else Compiler.generator.generate(Fct.ADD,0,0);
+            } else Compiler.generator.generate(Fct.ADD, 0, 0);
         } else {
             nxtlev = (SymSet) fsys.clone();
             nxtlev.set(Symbol.plus);
@@ -442,7 +429,7 @@ public class Parser {
     }
 
 
-    public void term(SymSet fsys,int lev) {
+    public void term(SymSet fsys, int lev) {
         Symbol mulop;
         SymSet nxtlev;
 
@@ -466,25 +453,25 @@ public class Parser {
     }
 
 
-    public void factor(SymSet fsys,int lev) {
+    public void factor(SymSet fsys, int lev) {
         SymSet nxtlev;
 
-        test(facbegsys, fsys, 24);			// 检测因子的开始符号
+        test(facbegsys, fsys, 24);            // 检测因子的开始符号
         if (facbegsys.get(symbol)) {
             if (symbol == Symbol.ident) {            // 因子为变量
-                SymbolTable.Item item = Compiler.symbolTable.getByName(Compiler.scanner.id);
-                switch (item.getType()) {
-                    case variable:			// 名字为变量
-                        if(item.getScope().equals(Compiler.cur_func))
-                            Compiler.generator.generate(Fct.LOD, lev - item.getLevel(), item.getAddress());
-                        else Error.print(123);
-                        break;
-                    case procedure:			// 名字为过程
-                        Compiler.generator.generate(Fct.CAL, 0, item.getAddress());//TODO 改指令 搞清函数地址
-                        break;
-                }
+                String tmpIdent=Compiler.scanner.id;
                 loadNextSymbol();
-            }else if (symbol == Symbol.number) {	// 因子为数
+                if(symbol==Symbol.lparen){
+                    loadNextSymbol();
+                    if(symbol!=Symbol.rparen)Error.print(123);
+                    SymbolTable.Item item=Compiler.symbolTable.getByName(tmpIdent);
+                    Compiler.generator.generate(Fct.CAL, 0, item.getAddress());//TODO 改指令 搞清函数地址
+                    loadNextSymbol();
+                }else {
+                    SymbolTable.Item item=Compiler.symbolTable.getByNameScope(tmpIdent,Compiler.cur_func);
+                    Compiler.generator.generate(Fct.LOD, lev - item.getLevel(), item.getAddress());
+                }
+            } else if (symbol == Symbol.number) {    // 因子为数
                 int num = Compiler.scanner.num;
                 if (num > Constant.amax) {
                     Error.print(31);
@@ -492,7 +479,7 @@ public class Parser {
                 }
                 Compiler.generator.generate(Fct.LIT, 0, num);
                 loadNextSymbol();
-            } else if (symbol == Symbol.lparen) {	// 因子为表达式
+            } else if (symbol == Symbol.lparen) {    // 因子为表达式
                 loadNextSymbol();
                 nxtlev = (SymSet) fsys.clone();
                 nxtlev.set(Symbol.rparen);
@@ -502,7 +489,7 @@ public class Parser {
                 } else {
                     Error.print(22);                    // 缺少右括号
                 }
-            }else {
+            } else {
                 // 做补救措施
                 test(fsys, facbegsys, 23);
             }

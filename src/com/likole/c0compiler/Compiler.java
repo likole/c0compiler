@@ -24,7 +24,7 @@ public class Compiler {
     public static ScannerImpl scanner;
     public static Parser parser;
     public static GeneratorImpl generator;
-    public static String cur_func;
+    public static String cur_func="NULL";
 
     //todo:rename when finished
     public static PrintStream fa;				// 输出虚拟机代码
@@ -54,6 +54,8 @@ public class Compiler {
         try {
             parser.loadNextSymbol();
             parser.prepare();
+            generator.listcode(0);
+            symbolTable.listTable();
 
         } catch (Exception e) {
             e.printStackTrace();

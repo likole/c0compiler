@@ -127,21 +127,12 @@ public class SymbolTable {
     private List<Item> items = new ArrayList<>();
 
 
-    public void add(Type type, int level, int address) {
+    public void add(Type type, int level, int address,Symbol returnType) {
         Item item = new Item();
         item.name = Compiler.scanner.id;
         item.setType(type);
-        switch (type) {
-            case variable:
-                item.setLevel(level);
-                item.setAddress(address);
-                break;
-            case procedure:
-                item.setLevel(level);
-                break;
-            default:
-                break;
-        }
+        item.setLevel(level);
+        item.setReturnType(returnType);
         items.add(item);
     }
 
@@ -149,18 +140,9 @@ public class SymbolTable {
         Item item = new Item();
         item.name = Compiler.scanner.id;
         item.setType(type);
-        switch (type) {
-            case variable:
-                item.setLevel(level);
-                item.setAddress(address);
-                item.setScope(scpoe);
-                break;
-            case procedure:
-                item.setLevel(level);
-                break;
-            default:
-                break;
-        }
+        item.setLevel(level);
+        item.setAddress(address);
+        item.setScope(scpoe);
         items.add(item);
     }
 
@@ -192,17 +174,19 @@ public class SymbolTable {
 
     public Item getByNameScope(String name,String scope){
         for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).getName().equals(name)&&items.get(i).getScope().equals(scope)) {
+            Item item=items.get(i);
+            if (item.getName().equals(name)&&(item.getScope().equals(scope)||item.getScope().equals("NULL"))) {
                 return items.get(i);
             }
         }
         return null;
     }
 
-    public void print(){
-        Compiler.fas.println("Name\tType\tValue\tLevel\tAddress\tSize\tretType\tScope");
+    public void listTable(){
+        Compiler.fas.printf("%-12s%-12s%-12s%-12s%-12s%-12s%-12s%-12s\n","Name","Type","Value","Level","Address","Size","ReturnType","Scope");
         for(Item item:items) {
-            Compiler.fas.println(item.getName()+"\t"+item.getType()+"\t"+item.getValue()+"\t"+item.getLevel()+"\t"+item.getAddress()+"\t"+item.getSize()+"\t"+item.getReturnType()+"\t"+item.getScope());
+            Compiler.fas.printf("%-12s%-12s%-12s%-12s%-12s%-12s%-12s%-12s\n",item.getName(),item.getType(),
+                    item.getValue(),item.getLevel(),item.getAddress(),item.getSize(),item.getReturnType(),item.getScope());
         }
         return ;
     }
