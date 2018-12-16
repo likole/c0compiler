@@ -20,8 +20,12 @@ public class Main {
     private JPanel optionsPanel;
     private JPanel inputPanel;
     private JButton openButton;
-    private JButton outputButton;
+    private JButton Button;
+    private JTabbedPane tabbedPane1;
     private JTextArea textArea1;
+    private JTextArea textArea2;
+    private JTextArea textArea3;
+    private JTextArea textArea4;
 
     private File sourceFile;
 
@@ -63,7 +67,13 @@ public class Main {
                 }else{
                     JOptionPane.showMessageDialog(mainPanel, "编译时发生了"+result+"个错误", "编译失败",JOptionPane.ERROR_MESSAGE);
                 }
+                textArea1.setText(readFile(new File("sourceCode")));
+                textArea2.setText(readFile(new File("objectCode")));
+                textArea3.setText(readFile(new File("symbolTable")));
+
             } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            } catch (IOException e1) {
                 e1.printStackTrace();
             }
         });

@@ -3,9 +3,13 @@
   <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="666" height="400"/>
+      <xy x="20" y="20" width="762" height="400"/>
     </constraints>
-    <properties/>
+    <properties>
+      <minimumSize width="700" height="148"/>
+      <opaque value="false"/>
+      <preferredSize width="700" height="616"/>
+    </properties>
     <border type="none"/>
     <children>
       <grid id="d6a35" binding="inputPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
@@ -61,14 +65,17 @@
           </grid>
           <scrollpane id="e2243">
             <constraints border-constraint="Center"/>
-            <properties/>
+            <properties>
+              <maximumSize width="3276700" height="3276700"/>
+            </properties>
             <border type="none"/>
             <children>
               <component id="893d0" class="javax.swing.JTextArea" binding="sourceCodeTextArea" default-binding="true">
                 <constraints/>
                 <properties>
+                  <autoscrolls value="true"/>
                   <lineWrap value="true"/>
-                  <rows value="30"/>
+                  <rows value="37"/>
                   <text value="请打开文件或在此输入源码"/>
                 </properties>
               </component>
@@ -84,33 +91,99 @@
         <properties/>
         <border type="none"/>
         <children>
-          <scrollpane id="ee872">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="278" height="19"/>
-              </grid>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="58d24" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
-                <constraints/>
-                <properties>
-                  <editable value="false"/>
-                </properties>
-              </component>
-            </children>
-          </scrollpane>
-          <component id="f6749" class="javax.swing.JButton" binding="outputButton" default-binding="true">
+          <component id="f6749" class="javax.swing.JButton" binding="Button">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="278" height="35"/>
               </grid>
             </constraints>
             <properties>
-              <text value=""/>
+              <text value="下一步"/>
             </properties>
           </component>
+          <tabbedpane id="1c237" binding="tabbedPane1" default-binding="true">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="200" height="200"/>
+              </grid>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <grid id="6fc6" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <tabbedpane title="源代码"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="b63a5" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="50"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
+                  </component>
+                </children>
+              </grid>
+              <grid id="90660" layout-manager="GridBagLayout">
+                <constraints>
+                  <tabbedpane title="虚拟机代码"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="56b94" class="javax.swing.JTextArea" binding="textArea2" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="50"/>
+                      </grid>
+                      <gridbag weightx="1.0" weighty="1.0"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                </children>
+              </grid>
+              <grid id="b6eb5" layout-manager="GridBagLayout">
+                <constraints>
+                  <tabbedpane title="名字表"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="ffa75" class="javax.swing.JTextArea" binding="textArea3" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="50"/>
+                      </grid>
+                      <gridbag weightx="1.0" weighty="1.0"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                </children>
+              </grid>
+              <grid id="7d68e" layout-manager="GridBagLayout">
+                <constraints>
+                  <tabbedpane title="执行状态"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="1ad66" class="javax.swing.JTextArea" binding="textArea4" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="50"/>
+                      </grid>
+                      <gridbag weightx="1.0" weighty="1.0"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </tabbedpane>
         </children>
       </grid>
     </children>

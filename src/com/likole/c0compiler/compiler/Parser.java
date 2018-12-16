@@ -361,7 +361,7 @@ public class Parser {
             if (symbol != Symbol.rparen) Error.print(116);
             loadNextSymbol();
             if (symbol != Symbol.semicolon) Error.print(117);
-            Compiler.generator.generate(Fct.RET, 0, 0);//TODO 考虑怎么返回值
+            Compiler.generator.generate(Fct.RET, 0, 0);
         } else if (symbol == Symbol.semicolon) {
             Compiler.generator.generate(Fct.RET, 0, 0);
         } else Error.print(115);
@@ -477,7 +477,7 @@ public class Parser {
                     if(symbol!=Symbol.rparen)Error.print(123);
                     SymbolTable.Item item=Compiler.symbolTable.getByName(tmpIdent);
                     Compiler.generator.generate(Fct.CAL, 0, item.getAddress());
-                    Compiler.generator.generate(Fct.LOD,0,0);//TODO 检查返回值正确与否
+                    Compiler.generator.generate(Fct.LOD,0,0);
                     loadNextSymbol();
                 }else {
                     SymbolTable.Item item=Compiler.symbolTable.getByNameScope(tmpIdent,Compiler.cur_func);

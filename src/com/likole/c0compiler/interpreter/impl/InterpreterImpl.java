@@ -85,7 +85,8 @@ public class InterpreterImpl implements Interpreter {
                     stack_top++;
                     break;
                 case WRT:
-                    System.out.println(stack[--stack_top]);
+                    Compiler.fa2.print(stack[--stack_top]);
+                    System.out.println(stack[stack_top]);
                     break;
                 case RET:
                     stack[stack[base_addr+1]]=stack[stack_top-1];
@@ -95,6 +96,7 @@ public class InterpreterImpl implements Interpreter {
                     break;
             }
         } while (ins_num != 0);
+        System.out.println("解释执行完毕");
     }
 
     @Override
