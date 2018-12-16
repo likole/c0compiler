@@ -80,13 +80,14 @@ public class InterpreterImpl implements Interpreter {
                     try {
                         stack[stack_top] = Integer.parseInt(Compiler.stdin.readLine());
                     } catch (Exception e) {
+                        System.out.println("readline error");
                     }
                     Compiler.fa2.println(stack[stack_top]);
                     stack_top++;
                     break;
                 case WRT:
-                    Compiler.fa2.print(stack[--stack_top]);
-                    System.out.println(stack[stack_top]);
+                    Compiler.fa2.print(stack[stack_top-1]);
+                    System.out.println(stack[stack_top-1]);
                     break;
                 case RET:
                     stack[stack[base_addr+1]]=stack[stack_top-1];

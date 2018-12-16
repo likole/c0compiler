@@ -127,7 +127,7 @@ public class SymbolTable {
     private List<Item> items = new ArrayList<>();
 
 
-    public void add(Type type, int level, int address,Symbol returnType) {
+    public void add(Type type, int level,Symbol returnType) {
         Item item = new Item();
         item.name = Compiler.scanner.id;
         item.setType(type);
