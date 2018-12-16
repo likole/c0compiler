@@ -192,6 +192,7 @@ public class Parser {
 
         }
 
+        if(!unDecFunction.isEmpty())Error.print(520);
 //        loadNextSymbol();
 //        block(fsys, 1);
 

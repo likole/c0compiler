@@ -74,11 +74,11 @@ public class InterpreterImpl implements Interpreter {
                     stack[stack_top - 1] = stack[stack_top - 1] / stack[stack_top];
                     break;
                 case RED:
-                    System.out.print("?");
+                    System.out.println("?");
                     Compiler.fa2.print("?");
                     stack[stack_top] = 0;
                     try {
-                        stack[stack_top] = Integer.parseInt(Compiler.stdin.readLine());
+                        stack[stack_top] = Integer.parseInt(Compiler.stdin.next());
                     } catch (Exception e) {
                         System.out.println("readline error");
                     }
