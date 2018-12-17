@@ -57,7 +57,6 @@ public class Compiler {
             parser.prepare();
             generator.listcode(0);
             symbolTable.listTable();
-            interpreter.interpret();
         } catch (Exception e) {
             e.printStackTrace();
             return -1;

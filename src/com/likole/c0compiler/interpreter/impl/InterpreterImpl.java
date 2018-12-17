@@ -4,6 +4,8 @@ import com.likole.c0compiler.Compiler;
 import com.likole.c0compiler.entity.Instruction;
 import com.likole.c0compiler.interpreter.Interpreter;
 
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 /**
@@ -11,18 +13,26 @@ import java.util.ArrayList;
  */
 public class InterpreterImpl implements Interpreter {
 
+    int ins_num, base_addr, stack_top;       // 指令指针(序号)，指令基址，栈顶指针
+    int[] stack = new int[stacksize];        // 栈
+    Instruction instruction;                            // 存放当前指令
+    ArrayList<Instruction> codes;
+    int flag,prevIns;
 
     @Override
-    public void interpret() {
-        int ins_num, base_addr, stack_top;                        // 指令指针(序号)，指令基址，栈顶指针
-        Instruction instruction;                            // 存放当前指令
-        ArrayList<Instruction> codes = Compiler.generator.codes;
-        int[] stack = new int[stacksize];        // 栈
-
+    public void init() {
+        codes = Compiler.generator.codes;
         System.out.println("start c0");
         stack_top = base_addr = ins_num = 0;
         stack[0] = stack[1] = stack[2] = 0;
-        do {
+        flag=0;
+    }
+
+    @Override
+    public void interpret() {
+
+        if (ins_num != 0||flag==0) {
+            prevIns=ins_num;
             instruction = codes.get(ins_num);         // 读当前指令
             ins_num++;
             switch (instruction.action) {
@@ -40,7 +50,7 @@ public class InterpreterImpl implements Interpreter {
                     break;
                 case CAL:
                     stack[stack_top] = base(instruction.l, stack, base_addr);    // 将静态作用域基地址入栈
-                    stack[stack_top+1] = base_addr;                   // 将动态作用域基地址入栈
+                    stack[stack_top + 1] = base_addr;                   // 将动态作用域基地址入栈
                     stack[stack_top + 2] = ins_num;                     // 将当前指令指针入栈
                     base_addr = stack_top;                              // 改变基地址指针值为新过程的基地址
                     ins_num = instruction.param;                        // 跳转
@@ -86,22 +96,36 @@ public class InterpreterImpl implements Interpreter {
                     stack_top++;
                     break;
                 case WRT:
-                    Compiler.fa2.print(stack[stack_top-1]);
-                    System.out.println(stack[stack_top-1]);
+                    Compiler.fa2.print(stack[stack_top - 1]);
+                    System.out.println(stack[stack_top - 1]);
                     break;
                 case RET:
-                    stack[stack[base_addr+1]]=stack[stack_top-1];
+                    stack[stack[base_addr + 1]] = stack[stack_top - 1];
                     stack_top = base_addr;
-                    ins_num = stack[stack_top+2];
-                    base_addr = stack[stack_top+1];
+                    ins_num = stack[stack_top + 2];
+                    base_addr = stack[stack_top + 1];
                     break;
             }
-        } while (ins_num != 0);
-        System.out.println("解释执行完毕");
+            flag++;
+        }
+        else System.out.println("解释执行完毕");
     }
 
     @Override
     public void print() {
+        PrintStream stackOut= null;
+        try {
+            stackOut = new PrintStream("stackOut");
+            stackOut.println(codes.get(prevIns).toString());
+            for (int i=stack_top;i>=0;i--){
+                if(i==stack_top)
+                    stackOut.printf("%-4d|%-4s|\n",i,"px");
+                else stackOut.printf("%-4d|%-4d|\n",i,stack[i]);
+                if(i==0) stackOut.println("    ------");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
     }
 

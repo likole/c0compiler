@@ -9,6 +9,8 @@ public interface Interpreter {
 
     final int stacksize=500;
 
+    void init();
+
     /**
      * 解释程序
      */
