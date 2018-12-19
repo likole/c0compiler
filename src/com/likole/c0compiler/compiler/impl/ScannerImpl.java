@@ -111,12 +111,13 @@ public class ScannerImpl implements Scanner{
         String line = "";
         try {
             if (column == length) {
-                while (line.equals(""))
+                while (line.equals("")||line.equals("\n")){
                     line = in.readLine() + "\n";
+                }
                 length = line.length();
                 column = 0;
                 content = line;
-                System.out.println(Compiler.generator.cx + " " + line);
+                if(!line.equals("null\n"))
                 Compiler.fa1.println(Compiler.generator.cx + " " + line);
             }
         } catch (IOException e) {
