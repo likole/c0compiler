@@ -111,7 +111,7 @@ public class ScannerImpl implements Scanner{
         String line = "";
         try {
             if (column == length) {
-                while (line.equals("")){
+                while (line.equals("")||line.equals("\n")){
                     line = in.readLine() + "\n";
                 }
                 length = line.length();
