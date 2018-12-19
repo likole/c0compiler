@@ -17,5 +17,7 @@ public interface InterpreterListener {
 
     void finished();
 
-    void now(int line, Instruction instruction);
+    void now(int line,int base, Instruction instruction);
+
+    void stack();
 }

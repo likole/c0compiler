@@ -41,11 +41,11 @@ public class InterpreterImpl implements Interpreter {
 
     @Override
     public int interpret() {
-
+        prePrint();
         if (ins_num != 0||flag==0) {
             prevIns=ins_num;
             instruction = codes.get(ins_num);         // 读当前指令
-            listener.now(ins_num,instruction);
+            listener.now(ins_num,base_addr,instruction);
             ins_num++;
             switch (instruction.action) {
                 case LIT:                // 将a的值取到栈顶
@@ -127,6 +127,8 @@ public class InterpreterImpl implements Interpreter {
                     break;
             }
             flag++;
+            afterPrint();
+            listener.stack();
             return 1;
         }
         else {
@@ -136,17 +138,51 @@ public class InterpreterImpl implements Interpreter {
         }
     }
 
-    @Override
-    public void print() {
+    public void prePrint() {
         PrintStream stackOut= null;
+//        try {
+//            stackOut = new PrintStream("stackOutPre");
+//            for (int i=stack_top;i>=0;i--){
+//                if(i==stack_top)
+//                    stackOut.printf("%-4d|%-4s|\n",i,"px");
+//                else stackOut.printf("%-4d|%-4d|\n",i,stack[i]);
+//                if(i==0) stackOut.println("    ------");
+//            }
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
         try {
-            stackOut = new PrintStream("stackOut");
-            stackOut.println(codes.get(prevIns).toString());
-            for (int i=stack_top;i>=0;i--){
+            stackOut = new PrintStream("stackOutPre");
+            for (int i=0;i<stack_top;i++){
                 if(i==stack_top)
-                    stackOut.printf("%-4d|%-4s|\n",i,"px");
-                else stackOut.printf("%-4d|%-4d|\n",i,stack[i]);
-                if(i==0) stackOut.println("    ------");
+                    stackOut.printf("%-4s\n","px");
+                else stackOut.printf("%-4d\n",stack[i]);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void afterPrint() {
+        PrintStream stackOut= null;
+//        try {
+//            stackOut = new PrintStream("stackOutAfter");
+//            for (int i=stack_top;i>=0;i--){
+//                if(i==stack_top)
+//                    stackOut.printf("%-4d|%-4s|\n",i,"px");
+//                else stackOut.printf("%-4d|%-4d|\n",i,stack[i]);
+//                if(i==0) stackOut.println("    ------");
+//            }
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+        try {
+            stackOut = new PrintStream("stackOutAfter");
+            for (int i=0;i<stack_top;i++){
+                if(i==stack_top)
+                    stackOut.printf("%-4s\n","px");
+                else stackOut.printf("%-4d\n",stack[i]);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

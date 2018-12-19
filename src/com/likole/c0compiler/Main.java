@@ -4,11 +4,13 @@ import com.likole.c0compiler.entity.Instruction;
 import com.likole.c0compiler.interpreter.InterpreterListener;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Vector;
 
 import static com.likole.c0compiler.Compiler.interpreter;
 
@@ -30,11 +32,12 @@ public class Main {
     private JTextArea textArea1;
     private JTextArea textArea2;
     private JTextArea textArea3;
-    private JTextArea textArea4;
     private JButton runButton;
     private JTextArea textArea5;
     private JButton backButton;
     private JLabel nowLabel;
+    private JTable table1;
+    private JTable table2;
 
     private File sourceFile;
 
@@ -94,6 +97,8 @@ public class Main {
                 }
                 interpreter.init();
                 textArea5.setText("");
+                nowLabel.setText("");
+                table2.setModel(new DefaultTableModel());
                 interpreter.setInterpreterListener(new InterpreterListener() {
                     @Override
                     public void print(int num) {
@@ -121,13 +126,49 @@ public class Main {
 
                     @Override
                     public void finished() {
-                        nowLabel.setText("");
+                        nowLabel.setText("程序运行完毕");
                         JOptionPane.showMessageDialog(mainPanel, "程序已运行完成", "运行完成", JOptionPane.INFORMATION_MESSAGE);
                     }
 
                     @Override
-                    public void now(int line, Instruction instruction) {
-                        nowLabel.setText("正在运行第 "+line+" 行："+instruction.getAction()+" "+instruction.getL()+" "+instruction.getParam());
+                    public void now(int line,int base, Instruction instruction) {
+                        nowLabel.setText("正在运行第 "+line+" 行："+instruction.getAction()+" "+instruction.getL()+" "+instruction.getParam()+"        "+"基址："+base);
+                    }
+
+                    @Override
+                    public void stack() {
+                        try {
+                            String pre=readFile(new File("stackOutPre"));
+                            String after=readFile(new File("stackOutAfter"));
+                            String[] pres=pre.split("\n");
+                            String[] afters=after.split("\n");
+                            int length=Math.max(pres.length,afters.length);
+                            DefaultTableModel model = new DefaultTableModel();
+                            Vector names=new Vector();
+                            names.add("");
+                            names.add("原数据");
+                            names.add("现在数据");
+                            Vector data=new Vector();
+                            for (int i = length-1; i >=0; i--) {
+                                Vector row=new Vector();
+                                row.add(i);
+                                if(pres.length>i){
+                                    row.add(pres[i]);
+                                }else{
+                                    row.add("");
+                                }
+                                if(afters.length>i){
+                                    row.add(afters[i]);
+                                }else{
+                                    row.add("");
+                                }
+                                data.add(row);
+                            }
+                            model.setDataVector(data,names);
+                            table2.setModel(model);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             } catch (IOException e1) {
@@ -136,27 +177,14 @@ public class Main {
         });
         stepButton.addActionListener(actionEvent -> {
             interpreter.interpret();
-            interpreter.print();
-            try {
-                textArea4.setText(readFile(new File("stackOut")));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         });
         runButton.addActionListener(actionEvent -> {
             interpreter.run();
-            try {
-                textArea4.setText(readFile(new File("stackOut")));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         });
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                nowLabel.setText("");
-                interpreter.init();
-            }
+        backButton.addActionListener(e -> {
+            nowLabel.setText("");
+            table2.setModel(new DefaultTableModel());
+            interpreter.init();
         });
     }
 
