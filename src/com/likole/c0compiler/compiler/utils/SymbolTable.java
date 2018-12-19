@@ -189,9 +189,9 @@ public class SymbolTable {
     }
 
     public void listTable(){
-        Compiler.fas.printf("%-12s%-12s%-12s%-12s%-12s%-12s%-12s%-12s\n","Name","Type","Value","Level","Address","Size","ReturnType","Scope");
+//        Compiler.fas.printf("%s,%s,%s,%s,%s,%s,%s,%s\n","Name","Type","Value","Level","Address","Size","ReturnType","Scope");
         for(Item item:items) {
-            Compiler.fas.printf("%-12s%-12s%-12s%-12s%-12s%-12s%-12s%-12s\n",item.getName(),item.getType(),
+            Compiler.fas.printf("%s,%s,%s,%s,%s,%s,%s,%ss\n",item.getName(),item.getType(),
                     item.getValue(),item.getLevel(),item.getAddress(),item.getSize(),item.getReturnType(),item.getScope());
         }
         return ;

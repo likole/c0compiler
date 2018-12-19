@@ -31,7 +31,6 @@ public class Main {
     private JTabbedPane tabbedPane1;
     private JTextArea textArea1;
     private JTextArea textArea2;
-    private JTextArea textArea3;
     private JButton runButton;
     private JTextArea textArea5;
     private JButton backButton;
@@ -90,11 +89,38 @@ public class Main {
                 }else{
                     textArea2.setText("未生成虚拟机代码");
                 }
-                if (showSymbolTable) {
-                    textArea3.setText(readFile(new File("symbolTable")));
-                }else{
-                    textArea3.setText("未生成名字表");
+//                名字表开始
+                DefaultTableModel model = new DefaultTableModel();
+                Vector names=new Vector();
+                String[] titles={"Name","Type","Value","Level","Address","Size","ReturnType","Scope"};
+                for (int i = 0; i < 8; i++) {
+                    names.add(titles[i]);
                 }
+                Vector data=new Vector();
+                if (showSymbolTable) {
+                    String symbolTable=readFile(new File("symbolTable"));
+                    String[] symbolTables=symbolTable.split("\n");
+                    for(String s:symbolTables){
+                        String[] ss=s.split(",");
+                        if(ss.length==8){
+                            Vector row=new Vector();
+                            for (String content:ss){
+                                row.add(content);
+                            }
+                            data.add(row);
+                        }
+                    }
+                }else{
+                    Vector row=new Vector();
+                    String notGenerated="没有生成名字表！";
+                    for(int i=0;i<8;i++){
+                        row.add(notGenerated.charAt(i));
+                    }
+                    data.add(row);
+                }
+                model.setDataVector(data,names);
+                table1.setModel(model);
+//                名字表结束
                 interpreter.init();
                 textArea5.setText("");
                 nowLabel.setText("");
