@@ -28,8 +28,14 @@ public class InterpreterImpl implements Interpreter {
         flag=0;
     }
 
+    public void test(){
+        while (interpret()==1) {
+
+        }
+    }
+
     @Override
-    public void interpret() {
+    public int interpret() {
 
         if (ins_num != 0||flag==0) {
             prevIns=ins_num;
@@ -108,8 +114,12 @@ public class InterpreterImpl implements Interpreter {
                     break;
             }
             flag++;
+            return 1;
         }
-        else System.out.println("解释执行完毕");
+        else {
+            System.out.println("解释执行完毕");
+            return 0;
+        }
     }
 
     @Override

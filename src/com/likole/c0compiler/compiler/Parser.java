@@ -138,8 +138,11 @@ public class Parser {
                             //记录当前分析函数
                             Compiler.cur_func = Compiler.scanner.id;
                             loadNextSymbol();
-                            if (unDecFunction.containsKey(Compiler.cur_func))
+                            if (unDecFunction.containsKey(Compiler.cur_func)){
                                 Compiler.generator.codes.get(unDecFunction.get(Compiler.cur_func)).setParam(Compiler.generator.cx);
+                                unDecFunction.remove(Compiler.cur_func);
+                            }
+
 
                             //分程序
                             block(fsys, 1);
@@ -182,8 +185,11 @@ public class Parser {
                     //记录当前分析函数
                     Compiler.cur_func = Compiler.scanner.id;
                     loadNextSymbol();
-                    if (unDecFunction.containsKey(Compiler.cur_func))
+                    if (unDecFunction.containsKey(Compiler.cur_func)){
                         Compiler.generator.codes.get(unDecFunction.get(Compiler.cur_func)).setParam(Compiler.generator.cx);
+                        unDecFunction.remove(Compiler.cur_func);
+                    }
+
                     //分程序
                     block(fsys, 1);
                 } else Error.print(5);

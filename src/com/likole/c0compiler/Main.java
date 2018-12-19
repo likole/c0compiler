@@ -85,8 +85,9 @@ public class Main {
             }
         });
         stepButton.addActionListener(actionEvent -> {
-            interpreter.interpret();
-            interpreter.print();
+            interpreter.test();
+//            interpreter.interpret();
+//            interpreter.print();
             try {
                 textArea4.setText(readFile(new File("stackOut")));
             } catch (IOException e) {

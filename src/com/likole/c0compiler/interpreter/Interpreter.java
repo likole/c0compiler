@@ -14,7 +14,7 @@ public interface Interpreter {
     /**
      * 解释程序
      */
-    void interpret();
+    int interpret();
 
     /**
      * 输出到文件
