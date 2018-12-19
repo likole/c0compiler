@@ -344,10 +344,11 @@ public class Parser {
             Compiler.generator.generate(Fct.JPC, 0, 0);
             Instruction code = Compiler.generator.getLast();
             singleStatement(fsys, lev);
-            Compiler.generator.generate(Fct.JMP,0,0);
             code.setParam(Compiler.generator.cx);
-            code=Compiler.generator.getLast();
             if (symbol == Symbol.elsesym) {
+                Compiler.generator.generate(Fct.JMP,0,0);
+                code.setParam(Compiler.generator.cx);
+                code=Compiler.generator.getLast();
                 loadNextSymbol();
                 singleStatement(fsys, lev);
                 code.setParam(Compiler.generator.cx);
