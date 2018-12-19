@@ -148,10 +148,11 @@ public class Parser {
                                     }
                                 }
                             }
-
-
                             //分程序
                             block(fsys, 1);
+                            Instruction code=Compiler.generator.getLast();
+                            if(code.getAction()!=Fct.RET)
+                                Compiler.generator.generate(Fct.RET,0,0);
                         } else {
                             //漏掉了）
                             Error.print(4);
@@ -181,6 +182,9 @@ public class Parser {
                     Compiler.cur_func = Compiler.scanner.id;
                     loadNextSymbol();
                     block(fsys, 1);
+                    Instruction code=Compiler.generator.getLast();
+                    if(code.getAction()!=Fct.RET)
+                        Compiler.generator.generate(Fct.RET,0,0);
                 } else Error.print(5);
             } else if (symbol == Symbol.ident) {
                 loadNextSymbol();
@@ -203,6 +207,9 @@ public class Parser {
 
                     //分程序
                     block(fsys, 1);
+                    Instruction code=Compiler.generator.getLast();
+                    if(code.getAction()!=Fct.RET)
+                        Compiler.generator.generate(Fct.RET,0,0);
                 } else Error.print(5);
 
             } else Error.print(4);
@@ -337,8 +344,8 @@ public class Parser {
             Compiler.generator.generate(Fct.JPC, 0, 0);
             Instruction code = Compiler.generator.getLast();
             singleStatement(fsys, lev);
-            code.setParam(Compiler.generator.cx);
             Compiler.generator.generate(Fct.JMP,0,0);
+            code.setParam(Compiler.generator.cx);
             code=Compiler.generator.getLast();
             if (symbol == Symbol.elsesym) {
                 loadNextSymbol();
@@ -359,8 +366,8 @@ public class Parser {
             expression(nxtlev, lev);
             if (symbol != Symbol.rparen) Error.print(119);
             loadNextSymbol();
-            Compiler.generator.generate(Fct.JPC, 0, 0);
             int tmpIns=Compiler.generator.cx-1;
+            Compiler.generator.generate(Fct.JPC, 0, 0);
             Instruction tmpCode = Compiler.generator.getLast();
             singleStatement(fsys, lev);
             Compiler.generator.generate(Fct.JMP,0,tmpIns);
