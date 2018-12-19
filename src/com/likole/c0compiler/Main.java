@@ -1,8 +1,11 @@
 package com.likole.c0compiler;
 
+import com.likole.c0compiler.entity.Instruction;
 import com.likole.c0compiler.interpreter.InterpreterListener;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,6 +33,8 @@ public class Main {
     private JTextArea textArea4;
     private JButton runButton;
     private JTextArea textArea5;
+    private JButton backButton;
+    private JLabel nowLabel;
 
     private File sourceFile;
 
@@ -116,7 +121,13 @@ public class Main {
 
                     @Override
                     public void finished() {
+                        nowLabel.setText("");
                         JOptionPane.showMessageDialog(mainPanel, "程序已运行完成", "运行完成", JOptionPane.INFORMATION_MESSAGE);
+                    }
+
+                    @Override
+                    public void now(int line, Instruction instruction) {
+                        nowLabel.setText("正在运行第 "+line+" 行："+instruction.getAction()+" "+instruction.getL()+" "+instruction.getParam());
                     }
                 });
             } catch (IOException e1) {
@@ -138,6 +149,13 @@ public class Main {
                 textArea4.setText(readFile(new File("stackOut")));
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        });
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                nowLabel.setText("");
+                interpreter.init();
             }
         });
     }

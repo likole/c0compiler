@@ -45,6 +45,7 @@ public class InterpreterImpl implements Interpreter {
         if (ins_num != 0||flag==0) {
             prevIns=ins_num;
             instruction = codes.get(ins_num);         // 读当前指令
+            listener.now(ins_num,instruction);
             ins_num++;
             switch (instruction.action) {
                 case LIT:                // 将a的值取到栈顶
