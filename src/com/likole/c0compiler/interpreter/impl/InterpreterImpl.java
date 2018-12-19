@@ -3,6 +3,7 @@ package com.likole.c0compiler.interpreter.impl;
 import com.likole.c0compiler.Compiler;
 import com.likole.c0compiler.entity.Instruction;
 import com.likole.c0compiler.interpreter.Interpreter;
+import com.likole.c0compiler.interpreter.InterpreterListener;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -18,6 +19,11 @@ public class InterpreterImpl implements Interpreter {
     Instruction instruction;                            // 存放当前指令
     ArrayList<Instruction> codes;
     int flag,prevIns,position;
+    InterpreterListener listener;
+
+    public void setInterpreterListener(InterpreterListener listener){
+        this.listener=listener;
+    }
 
     @Override
     public void init() {
@@ -28,9 +34,9 @@ public class InterpreterImpl implements Interpreter {
         flag=0;
     }
 
-    public void test(){
+    public void run(){
         while (interpret()==1) {
-
+            interpret();
         }
     }
 
@@ -105,6 +111,7 @@ public class InterpreterImpl implements Interpreter {
                 case WRT:
                     Compiler.fa2.print(stack[stack_top - 1]);
                     System.out.println(stack[stack_top - 1]);
+                    listener.print(stack[stack_top-1]);
                     break;
                 case RET:
                     stack[stack[base_addr + 1]] = stack[stack_top - 1];

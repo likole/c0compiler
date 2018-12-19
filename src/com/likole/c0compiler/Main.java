@@ -1,15 +1,11 @@
 package com.likole.c0compiler;
 
-import com.likole.c0compiler.entity.Instruction;
-import com.likole.c0compiler.interpreter.Interpreter;
-import com.sun.org.apache.bcel.internal.generic.NEW;
+import com.likole.c0compiler.interpreter.InterpreterListener;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import static com.likole.c0compiler.Compiler.interpreter;
 
@@ -32,6 +28,8 @@ public class Main {
     private JTextArea textArea2;
     private JTextArea textArea3;
     private JTextArea textArea4;
+    private JButton runButton;
+    private JTextArea textArea5;
 
     private File sourceFile;
 
@@ -52,10 +50,12 @@ public class Main {
     private void initView() {
         openButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.showDialog(new JLabel(), "打开");
+            int selected= fileChooser.showDialog(new JLabel(), "打开");
             sourceFile = fileChooser.getSelectedFile();
             try {
-                sourceCodeTextArea.setText(readFile(sourceFile));
+                if(sourceFile!=null&&selected==JFileChooser.APPROVE_OPTION){
+                    sourceCodeTextArea.setText(readFile(sourceFile));
+                }
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -72,24 +72,57 @@ public class Main {
                 } else if (result == -1) {
                     JOptionPane.showMessageDialog(mainPanel, "发生了未知的错误，请检查日志", "编译失败", JOptionPane.ERROR_MESSAGE);
                 } else if(result == -2){
-                    JOptionPane.showMessageDialog(mainPanel, "意外读到文件尾，请检查是否遗漏右括号'}'或if体是否为空", "编译失败", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(mainPanel, "编译时发生严重错误，无法继续编译", "编译失败", JOptionPane.ERROR_MESSAGE);
                 }else{
                     JOptionPane.showMessageDialog(mainPanel, "编译时发生了" + result + "个错误", "编译失败", JOptionPane.ERROR_MESSAGE);
                 }
                 textArea1.setText(readFile(new File("sourceCode")));
-                if (showObjectCode) textArea2.setText(readFile(new File("objectCode")));
-                if (showSymbolTable) textArea3.setText(readFile(new File("symbolTable")));
+                if (showObjectCode) {
+                    textArea2.setText(readFile(new File("objectCode")));
+                }else{
+                    textArea2.setText("未生成虚拟机代码");
+                }
+                if (showSymbolTable) {
+                    textArea3.setText(readFile(new File("symbolTable")));
+                }else{
+                    textArea3.setText("未生成名字表");
+                }
                 interpreter.init();
-            } catch (FileNotFoundException e1) {
-                e1.printStackTrace();
+                interpreter.setInterpreterListener(new InterpreterListener() {
+                    @Override
+                    public void print(int num) {
+                        textArea5.setText(textArea5.getText()+"\n"+num);
+                    }
+
+                    @Override
+                    public int read() {
+                        while (true){
+                            String input= JOptionPane.showInputDialog("请输入数据","输入");
+                            try{
+                                int i= Integer.parseInt(input);
+                                return i;
+                            }catch (Exception e){
+
+                            }
+                        }
+
+                    }
+                });
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
         });
         stepButton.addActionListener(actionEvent -> {
-            interpreter.test();
-//            interpreter.interpret();
-//            interpreter.print();
+            interpreter.interpret();
+            interpreter.print();
+            try {
+                textArea4.setText(readFile(new File("stackOut")));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        runButton.addActionListener(actionEvent -> {
+            interpreter.run();
             try {
                 textArea4.setText(readFile(new File("stackOut")));
             } catch (IOException e) {
