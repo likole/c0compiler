@@ -101,7 +101,8 @@ public class InterpreterImpl implements Interpreter {
                     Compiler.fa2.print("?");
                     stack[stack_top] = 0;
                     try {
-                        stack[stack_top] = Integer.parseInt(Compiler.stdin.next());
+                        stack[stack_top] = listener.read();
+//                        stack[stack_top] = Integer.parseInt(Compiler.stdin.next());
                     } catch (Exception e) {
                         System.out.println("readline error");
                     }

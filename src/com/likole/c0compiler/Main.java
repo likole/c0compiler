@@ -97,10 +97,10 @@ public class Main {
                     @Override
                     public int read() {
                         while (true){
-                            String input= JOptionPane.showInputDialog("请输入数据","输入");
+                            String input= JOptionPane.showInputDialog("请输入数据","");
                             try{
-                                int i= Integer.parseInt(input);
-                                return i;
+                                int in= Integer.parseInt(input);
+                                return in;
                             }catch (Exception e){
 
                             }
