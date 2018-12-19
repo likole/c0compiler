@@ -175,7 +175,13 @@ public class SymbolTable {
     public Item getByNameScope(String name,String scope){
         for (int i = 0; i < items.size(); i++) {
             Item item=items.get(i);
-            if (item.getName().equals(name)&&(item.getScope().equals(scope)||item.getScope().equals("NULL"))) {
+            if (item.getName().equals(name)&&item.getScope().equals(scope)) {
+                return items.get(i);
+            }
+        }
+        for (int i = 0; i < items.size(); i++) {
+            Item item=items.get(i);
+            if (item.getName().equals(name)&&item.getScope().equals("NULL")) {
                 return items.get(i);
             }
         }

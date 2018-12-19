@@ -11,6 +11,7 @@ import com.likole.c0compiler.entity.SymSet;
 import com.likole.c0compiler.entity.Symbol;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -139,10 +140,11 @@ public class Parser {
                             Compiler.cur_func = Compiler.scanner.id;
                             loadNextSymbol();
                             if (unDecFunction.containsValue(Compiler.cur_func)){
-                                for (Map.Entry<Integer,String > entry:unDecFunction.entrySet()){
-                                    if(entry.getValue()==Compiler.cur_func){
+                                for (Iterator<Map.Entry<Integer, String>> it = unDecFunction.entrySet().iterator(); it.hasNext(); ) {
+                                    Map.Entry<Integer, String> entry = it.next();
+                                    if(entry.getValue().equals(Compiler.cur_func)){
                                         Compiler.generator.codes.get(entry.getKey()).setParam(Compiler.generator.cx);
-                                        unDecFunction.remove(entry.getKey());
+                                        it.remove();
                                     }
                                 }
                             }
@@ -190,10 +192,11 @@ public class Parser {
                     Compiler.cur_func = Compiler.scanner.id;
                     loadNextSymbol();
                     if (unDecFunction.containsValue(Compiler.cur_func)){
-                        for (Map.Entry<Integer,String > entry:unDecFunction.entrySet()){
-                            if(entry.getValue()==Compiler.cur_func){
+                        for (Iterator<Map.Entry<Integer, String>> it = unDecFunction.entrySet().iterator(); it.hasNext(); ) {
+                            Map.Entry<Integer, String> entry = it.next();
+                            if(entry.getValue().equals(Compiler.cur_func)){
                                 Compiler.generator.codes.get(entry.getKey()).setParam(Compiler.generator.cx);
-                                unDecFunction.remove(entry.getKey());
+                                it.remove();
                             }
                         }
                     }
