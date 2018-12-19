@@ -71,7 +71,9 @@ public class Main {
                     JOptionPane.showMessageDialog(mainPanel, "编译成功", "编译成功", JOptionPane.INFORMATION_MESSAGE);
                 } else if (result == -1) {
                     JOptionPane.showMessageDialog(mainPanel, "发生了未知的错误，请检查日志", "编译失败", JOptionPane.ERROR_MESSAGE);
-                } else {
+                } else if(result == -2){
+                    JOptionPane.showMessageDialog(mainPanel, "意外读到文件尾，请检查是否遗漏右括号'}'或if体是否为空", "编译失败", JOptionPane.ERROR_MESSAGE);
+                }else{
                     JOptionPane.showMessageDialog(mainPanel, "编译时发生了" + result + "个错误", "编译失败", JOptionPane.ERROR_MESSAGE);
                 }
                 textArea1.setText(readFile(new File("sourceCode")));

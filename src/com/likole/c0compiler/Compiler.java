@@ -60,6 +60,9 @@ public class Compiler {
             symbolTable.listTable();
         } catch (Exception e) {
             e.printStackTrace();
+            if(e instanceof IllegalStateException){
+                return -2;
+            }
             return -1;
         }
         return Error.errorCount;

@@ -299,7 +299,9 @@ public class Parser {
                     } else Compiler.generator.generate(Fct.CAL, 0, item.getAddress());
 
                     loadNextSymbol();
-                } else assignmentStatement(fsys, lev, tmpIdent);
+                } else {
+                    assignmentStatement(fsys, lev, tmpIdent);
+                }
                 break;
             case scanfsym:
                 readStatement(fsys, lev);
@@ -387,7 +389,7 @@ public class Parser {
             nxtlev = (SymSet) fsys.clone();
             expression(nxtlev, lev);
             // parseExpression将产生一系列指令，但最终结果将会保存在栈顶，执行sto命令完成赋值
-            Compiler.generator.generate(Fct.STO, lev - item.getLevel(), item.getAddress());
+            Compiler.generator.generate(Fct.STO, item.getLevel(), item.getAddress());
         } else {
             Error.print(111);                            // 变量未找到
         }
@@ -424,7 +426,7 @@ public class Parser {
             if (symbol != Symbol.rparen) Error.print(111);
             loadNextSymbol();
             Compiler.generator.generate(Fct.RED, 0, 0);
-            Compiler.generator.generate(Fct.STO, lev - item.getLevel(), item.getAddress());
+            Compiler.generator.generate(Fct.STO, item.getLevel(), item.getAddress());
         } else test(fsys, facbegsys, lev);
 
     }
@@ -526,11 +528,11 @@ public class Parser {
                         unDecFunction.put(Compiler.generator.cx,tmpIdent );
                         Compiler.generator.generate(Fct.CAL, 0, 0);
                     } else Compiler.generator.generate(Fct.CAL, 0, item.getAddress());
-                    Compiler.generator.generate(Fct.LOD, 0, 0);
+                    Compiler.generator.generate(Fct.LOD, 1, 0);
                     loadNextSymbol();
                 } else {
                     SymbolTable.Item item = Compiler.symbolTable.getByNameScope(tmpIdent, Compiler.cur_func);
-                    Compiler.generator.generate(Fct.LOD, lev - item.getLevel(), item.getAddress());
+                    Compiler.generator.generate(Fct.LOD, item.getLevel(), item.getAddress());
                 }
             } else if (symbol == Symbol.number) {    // 因子为数
                 int num = Compiler.scanner.num;
