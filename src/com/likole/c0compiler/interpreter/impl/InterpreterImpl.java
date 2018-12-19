@@ -17,7 +17,7 @@ public class InterpreterImpl implements Interpreter {
     int[] stack = new int[stacksize];        // 栈
     Instruction instruction;                            // 存放当前指令
     ArrayList<Instruction> codes;
-    int flag,prevIns;
+    int flag,prevIns,position;
 
     @Override
     public void init() {
@@ -41,12 +41,14 @@ public class InterpreterImpl implements Interpreter {
                     stack_top++;
                     break;
                 case LOD:                // 取相对当前过程的数据基地址为a的内存的值到栈顶
-                    stack[stack_top] = stack[base(instruction.l, stack, base_addr) + instruction.param];
+                    position=(instruction.l==1)?instruction.param:base_addr+instruction.param;
+                    stack[stack_top] = stack[position];
                     stack_top++;
                     break;
                 case STO:
                     stack_top--;
-                    stack[base(instruction.l, stack, base_addr) + instruction.param] = stack[stack_top];
+                    position=(instruction.l==1)?instruction.param:base_addr+instruction.param;
+                    stack[position] = stack[stack_top];
                     break;
                 case CAL:
                     stack[stack_top] = base(instruction.l, stack, base_addr);    // 将静态作用域基地址入栈
@@ -60,7 +62,6 @@ public class InterpreterImpl implements Interpreter {
                     break;
                 case JMP:
                     ins_num = instruction.param;
-                    //TODO 要将main函数地址传入吗?
                     break;
                 case JPC:                // 条件跳转（当栈顶为0的时候跳转）
                     stack_top--;
