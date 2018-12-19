@@ -88,6 +88,7 @@ public class Main {
                     textArea3.setText("未生成名字表");
                 }
                 interpreter.init();
+                textArea5.setText("");
                 interpreter.setInterpreterListener(new InterpreterListener() {
                     @Override
                     public void print(int num) {
@@ -95,17 +96,27 @@ public class Main {
                     }
 
                     @Override
-                    public int read() {
+                    public String read() {
                         while (true){
-                            String input= JOptionPane.showInputDialog("请输入数据","");
-                            try{
-                                int in= Integer.parseInt(input);
-                                return in;
-                            }catch (Exception e){
+                            return JOptionPane.showInputDialog("请输入数据","");
 
-                            }
                         }
 
+                    }
+
+                    @Override
+                    public void readError() {
+                        JOptionPane.showMessageDialog(mainPanel, "输入数据有误", "运行错误", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                    @Override
+                    public void divideByZero() {
+                        JOptionPane.showMessageDialog(mainPanel, "除0错误", "运行错误", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                    @Override
+                    public void finished() {
+                        JOptionPane.showMessageDialog(mainPanel, "程序已运行完成", "运行完成", JOptionPane.INFORMATION_MESSAGE);
                     }
                 });
             } catch (IOException e1) {

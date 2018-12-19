@@ -7,5 +7,11 @@ public interface InterpreterListener {
 
     void print(int num);
 
-    int read();
+    String read();
+
+    void readError();
+
+    void divideByZero();
+
+    void finished();
 }

@@ -36,7 +36,6 @@ public class InterpreterImpl implements Interpreter {
 
     public void run(){
         while (interpret()==1) {
-            interpret();
         }
     }
 
@@ -94,16 +93,21 @@ public class InterpreterImpl implements Interpreter {
                     break;
                 case DIV:
                     stack_top--;
-                    stack[stack_top - 1] = stack[stack_top - 1] / stack[stack_top];
+                    try{
+                        stack[stack_top - 1] = stack[stack_top - 1] / stack[stack_top];
+                    }catch (ArithmeticException e){
+                        listener.divideByZero();
+                    }
                     break;
                 case RED:
                     System.out.println("?");
                     Compiler.fa2.print("?");
                     stack[stack_top] = 0;
                     try {
-                        stack[stack_top] = listener.read();
+                        stack[stack_top] = Integer.parseInt(listener.read()) ;
 //                        stack[stack_top] = Integer.parseInt(Compiler.stdin.next());
                     } catch (Exception e) {
+                        listener.readError();
                         System.out.println("readline error");
                     }
                     Compiler.fa2.println(stack[stack_top]);
@@ -126,6 +130,7 @@ public class InterpreterImpl implements Interpreter {
         }
         else {
             System.out.println("解释执行完毕");
+            listener.finished();
             return 0;
         }
     }
