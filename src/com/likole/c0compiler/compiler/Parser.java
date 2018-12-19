@@ -338,9 +338,12 @@ public class Parser {
             Instruction code = Compiler.generator.getLast();
             singleStatement(fsys, lev);
             code.setParam(Compiler.generator.cx);
+            Compiler.generator.generate(Fct.JMP,0,0);
+            code=Compiler.generator.getLast();
             if (symbol == Symbol.elsesym) {
                 loadNextSymbol();
                 singleStatement(fsys, lev);
+                code.setParam(Compiler.generator.cx);
             }
         } else Error.print(117);
     }
@@ -357,8 +360,10 @@ public class Parser {
             if (symbol != Symbol.rparen) Error.print(119);
             loadNextSymbol();
             Compiler.generator.generate(Fct.JPC, 0, 0);
+            int tmpIns=Compiler.generator.cx-1;
             Instruction tmpCode = Compiler.generator.getLast();
             singleStatement(fsys, lev);
+            Compiler.generator.generate(Fct.JMP,0,tmpIns);
             tmpCode.setParam(Compiler.generator.cx);
         } else Error.print(119);
     }
