@@ -47,13 +47,13 @@ public class InterpreterImpl implements Interpreter {
                     stack_top++;
                     break;
                 case LOD:                // 取相对当前过程的数据基地址为a的内存的值到栈顶
-                    position=(instruction.l==1)?instruction.param:base_addr+instruction.param;
+                    position=(instruction.l==0)?instruction.param:base_addr+instruction.param;
                     stack[stack_top] = stack[position];
                     stack_top++;
                     break;
                 case STO:
                     stack_top--;
-                    position=(instruction.l==1)?instruction.param:base_addr+instruction.param;
+                    position=(instruction.l==0)?instruction.param:base_addr+instruction.param;
                     stack[position] = stack[stack_top];
                     break;
                 case CAL:

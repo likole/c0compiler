@@ -14,7 +14,7 @@
     <children>
       <grid id="d6a35" binding="inputPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
@@ -75,7 +75,7 @@
                 <properties>
                   <autoscrolls value="true"/>
                   <lineWrap value="true"/>
-                  <rows value="37"/>
+                  <rows value="20"/>
                   <text value="请打开文件或在此输入源码"/>
                 </properties>
               </component>
@@ -83,7 +83,7 @@
           </scrollpane>
         </children>
       </grid>
-      <grid id="7a0b" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="7a0b" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -91,17 +91,6 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="f6749" class="javax.swing.JButton" binding="stepButton">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="278" height="35"/>
-              </grid>
-            </constraints>
-            <properties>
-              <horizontalTextPosition value="0"/>
-              <text value="下一步"/>
-            </properties>
-          </component>
           <tabbedpane id="1c237" binding="tabbedPane1" default-binding="true">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -180,6 +169,18 @@
                       <gridbag weightx="1.0" weighty="1.0"/>
                     </constraints>
                     <properties/>
+                  </component>
+                  <component id="34feb" class="javax.swing.JButton" binding="stepButton">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="278" height="35"/>
+                      </grid>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <horizontalTextPosition value="0"/>
+                      <text value="下一步"/>
+                    </properties>
                   </component>
                 </children>
               </grid>
