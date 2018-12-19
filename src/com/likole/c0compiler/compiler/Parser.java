@@ -255,7 +255,7 @@ public class Parser {
             varDeclaration(1);
             while (symbol == Symbol.comma) {
                 loadNextSymbol();
-                varDeclaration(0);
+                varDeclaration(1);
             }
             if (symbol == Symbol.semicolon) {
                 loadNextSymbol();
