@@ -35,7 +35,7 @@ public class Parser {
      */
     private int dx = 0;
 
-    private Map<String, Integer> unDecFunction = new HashMap<>();
+    private Map<Integer, String> unDecFunction = new HashMap<>();
 
     public Parser() {
 
@@ -138,9 +138,13 @@ public class Parser {
                             //记录当前分析函数
                             Compiler.cur_func = Compiler.scanner.id;
                             loadNextSymbol();
-                            if (unDecFunction.containsKey(Compiler.cur_func)){
-                                Compiler.generator.codes.get(unDecFunction.get(Compiler.cur_func)).setParam(Compiler.generator.cx);
-                                unDecFunction.remove(Compiler.cur_func);
+                            if (unDecFunction.containsValue(Compiler.cur_func)){
+                                for (Map.Entry<Integer,String > entry:unDecFunction.entrySet()){
+                                    if(entry.getValue()==Compiler.cur_func){
+                                        Compiler.generator.codes.get(entry.getKey()).setParam(Compiler.generator.cx);
+                                        unDecFunction.remove(entry.getKey());
+                                    }
+                                }
                             }
 
 
@@ -185,9 +189,13 @@ public class Parser {
                     //记录当前分析函数
                     Compiler.cur_func = Compiler.scanner.id;
                     loadNextSymbol();
-                    if (unDecFunction.containsKey(Compiler.cur_func)){
-                        Compiler.generator.codes.get(unDecFunction.get(Compiler.cur_func)).setParam(Compiler.generator.cx);
-                        unDecFunction.remove(Compiler.cur_func);
+                    if (unDecFunction.containsValue(Compiler.cur_func)){
+                        for (Map.Entry<Integer,String > entry:unDecFunction.entrySet()){
+                            if(entry.getValue()==Compiler.cur_func){
+                                Compiler.generator.codes.get(entry.getKey()).setParam(Compiler.generator.cx);
+                                unDecFunction.remove(entry.getKey());
+                            }
+                        }
                     }
 
                     //分程序
@@ -276,7 +284,7 @@ public class Parser {
                     if (symbol != Symbol.rparen) Error.print(123);
                     SymbolTable.Item item = Compiler.symbolTable.getByName(tmpIdent);
                     if (item == null) {
-                        unDecFunction.put(tmpIdent, Compiler.generator.cx);
+                        unDecFunction.put(Compiler.generator.cx,tmpIdent);
                         Compiler.generator.generate(Fct.CAL, 0, 0);
                     } else Compiler.generator.generate(Fct.CAL, 0, item.getAddress());
 
@@ -499,7 +507,7 @@ public class Parser {
                     if (symbol != Symbol.rparen) Error.print(123);
                     SymbolTable.Item item = Compiler.symbolTable.getByName(tmpIdent);
                     if (item == null) {
-                        unDecFunction.put(tmpIdent, Compiler.generator.cx);
+                        unDecFunction.put(Compiler.generator.cx,tmpIdent );
                         Compiler.generator.generate(Fct.CAL, 0, 0);
                     } else Compiler.generator.generate(Fct.CAL, 0, item.getAddress());
                     Compiler.generator.generate(Fct.LOD, 0, 0);
