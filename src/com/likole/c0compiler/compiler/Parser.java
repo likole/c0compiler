@@ -19,13 +19,14 @@ import java.util.Map;
  */
 public class Parser {
 
-    // 表示声明开始的符号集合、表示语句开始的符号集合、表示因子开始的符号集合
-    // 实际上这就是声明、语句和因子的FIRST集合
+    /**
+     * 表示声明开始的符号集合、表示语句开始的符号集合、表示因子开始的符号集合
+     * 实际上这就是声明、语句和因子的FIRST集合
+     */
     private SymSet declbegsys, statbegsys, facbegsys;
 
     /**
-     * 当前符号，由nextsym()读入
-     *
+     * 当前符号，由loadNextSymbol()读入
      * @see #loadNextSymbol()
      */
     private Symbol symbol;
@@ -36,8 +37,17 @@ public class Parser {
      */
     private int dx = 0;
 
+    /**
+     * 超前使用函数
+     * 当调用了一个未定义的函数，先记录在此map中
+     * 在分析一个函数时，会在该map中查找是否前面有调用该函数，如果有，则设置对应的cx的值并在该map中移除
+     * 当程序分析完成时，如果该map不为空，则说明有函数未定义
+     */
     private Map<Integer, String> unDecFunction = new HashMap<>();
 
+    /**
+     * 构造函数，设置了声明开始符号集，语句开始符号集，因子开始符号集
+     */
     public Parser() {
 
         // 设置声明开始符号集
@@ -66,6 +76,20 @@ public class Parser {
     }
 
 
+    /**
+     * 补救措施，短语层恢复
+     * <pre>
+     *   在进入某个语法单位时，调用TEST函数, 检查当前
+     *  符号是否属于该语法单位的开始符号集合. 若不属
+     *  于，则滤去开始符号和后跟符号集合外的所有符号
+     *  在语法单位分析结束时，调用TEST函数, 检查当前
+     *  符号是否属于调用该语法单位时应有的后跟符号集
+     *  合. 若不属于，则滤去后跟符号和开始符号集合外
+     *  的所有符号
+     * </pre>
+     * @param s1 需要的集合
+     * @param s2 补救的集合
+     */
     public void test(SymSet s1, SymSet s2, int errorcode) {
         if (!s1.get(symbol)) {
             Error.print(errorcode);
@@ -77,12 +101,18 @@ public class Parser {
     }
 
 
+    /**
+     * 读取下一个符号
+     */
     public void loadNextSymbol() {
         Compiler.scanner.getsym();
         symbol = Compiler.scanner.symbol;
     }
 
 
+    /**
+     * 一些准备工作
+     */
     public void prepare() {
         SymSet nxtlev = new SymSet(Constant.symnum);
         nxtlev.or(declbegsys);
@@ -92,6 +122,7 @@ public class Parser {
     }
 
     /**
+     * 语法分析
      * <程序> := [<变量定义部分>] {<自定义函数定义部分>} <主函数>
      */
     public void parse(SymSet fsys) {
@@ -224,7 +255,7 @@ public class Parser {
 
     /**
      * 变量声明
-     * 分析 id
+     * 读取标识符并加入符号表中
      */
     void varDeclaration(int level) {
         if (symbol == Symbol.ident) {
@@ -237,6 +268,7 @@ public class Parser {
     }
 
     /**
+     * 分析块
      * <分程序> := '{' [<变量定义部分>] <语句序列> '}'
      */
     public void block(SymSet fsys, int lev) {
@@ -274,6 +306,7 @@ public class Parser {
     }
 
     /**
+     * parse statement sequence
      * <语句序列> := <语句> {<语句>}
      */
     public void statementSeq(SymSet fsys, int lev) {
@@ -284,6 +317,19 @@ public class Parser {
 
     }
 
+
+    /**
+     * parse a single statement,it can be condition statement, loop statement, assignment statement, etc.
+     * <语句> :=  <条件语句>｜<循环语句> | '{'<语句序列>'}' | <自定义函数调用语句> | <赋值语句> | <返回语句> | <读语句> | <写语句> | ;
+     *  <条件语句> {@link Parser#condStatement(SymSet, int)}
+     *  <循环语句> {@link Parser#cycStatement(SymSet, int)}
+     *  '{'<语句序列>'}'  {@link Parser#statementSeq(SymSet, int)}
+     *  <自定义函数调用语句> 在该函数内实现
+     *  <赋值语句> {@link Parser#assignmentStatement(SymSet, int, String)}
+     *  <返回语句> {@link Parser#retStatement(SymSet, int)}
+     *  <读语句> {@link Parser#readStatement(SymSet, int)}
+     *  <写语句> {@link Parser#writeStatement(SymSet, int)}
+     */
     public void singleStatement(SymSet fsys, int lev) {
         switch (symbol) {
             case ident:
@@ -333,6 +379,10 @@ public class Parser {
     }
 
 
+    /**
+     * parse condition statement
+     * <条件语句> := if '('<表达式>')'  <语句> [else <语句> ]
+     */
     public void condStatement(SymSet fsys, int lev) {
         SymSet nxtlev;
         loadNextSymbol();
@@ -359,6 +409,10 @@ public class Parser {
     }
 
 
+    /**
+     * parse loop statement
+     * <循环语句> := while '(' <表达式>')' <语句>
+     */
     public void cycStatement(SymSet fsys, int lev) {
         SymSet nxtlev;
         loadNextSymbol();
@@ -379,6 +433,10 @@ public class Parser {
     }
 
 
+    /**
+     * parse assignment statement
+     * <赋值语句> := id = <表达式>;
+     */
     public void assignmentStatement(SymSet fsys, int lev, String ident) {
         SymSet nxtlev;
         SymbolTable.Item item = Compiler.symbolTable.getByNameScope(ident, Compiler.cur_func);
@@ -397,6 +455,10 @@ public class Parser {
     }
 
 
+    /**
+     * parse return statement
+     * <返回语句> := return ['(' <表达式> ')'] ;
+     */
     public void retStatement(SymSet fsys, int lev) {
         SymSet nxtlev;
         loadNextSymbol();
@@ -415,6 +477,10 @@ public class Parser {
     }
 
 
+    /**
+     * parse read statement
+     * <读语句> := scanf '(' id ')';
+     */
     public void readStatement(SymSet fsys, int lev) {
         loadNextSymbol();
         if (symbol == Symbol.lparen) {
@@ -432,6 +498,10 @@ public class Parser {
     }
 
 
+    /**
+     * parse write statement
+     * <写语句> := printf '(' [ <表达式>] ')';
+     */
     public void writeStatement(SymSet fsys, int lev) {
         SymSet nxtlev;
         loadNextSymbol();
@@ -448,6 +518,10 @@ public class Parser {
     }
 
 
+    /**
+     * parse expression
+     * <表达式> :=  [+｜-] <项> { (+｜-) <项>}
+     */
     public void expression(SymSet fsys, int lev) {
         Symbol addop;
         SymSet nxtlev;
@@ -488,6 +562,10 @@ public class Parser {
     }
 
 
+    /**
+     * parse term
+     * <项>  :=  <因子>｛(*｜/) <因子>｝
+     */
     public void term(SymSet fsys, int lev) {
         Symbol mulop;
         SymSet nxtlev;
@@ -512,6 +590,10 @@ public class Parser {
     }
 
 
+    /**
+     * parse factor
+     * <因子>  :=  id｜'(' <表达式>')' | num | <自定义函数调用>
+     */
     public void factor(SymSet fsys, int lev) {
         SymSet nxtlev;
 
